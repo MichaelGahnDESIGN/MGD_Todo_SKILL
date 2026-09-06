@@ -3,7 +3,8 @@ name: todo
 description: >-
   Universelles TODO-Management für KI-Agenten: TODO.html lesen, Todos hinzufügen,
   Status aktualisieren, in freien Kategorien/Unterkategorien organisieren, debuggen,
-  aus Projekt-Quellen synchronisieren und ältere Dateien aufs aktuelle Format bringen.
+  aus Projekt-Quellen synchronisieren, erledigte aus- und einblenden, alte
+  erledigte Todos aufräumen und ältere Dateien aufs aktuelle Format bringen.
   Kompatibel mit Claude Code und ChatGPT Codex.
 ---
 
@@ -57,6 +58,27 @@ Langbeschreibung…</details>`. Die Kurzbeschreibung ist immer sichtbar,
 die Langbeschreibung klappt per Klick auf — gut für Belege,
 Datei:Zeile-Referenzen oder Entscheidungsgründe, die beim schnellen
 Überfliegen der Liste nicht stören sollen.
+
+**Zeitstempel:** Jede Zeile trägt `data-erstellt="YYYY-MM-DDTHH:MM"` (Anlegen)
+und, sobald sie erledigt ist, `data-erledigt="YYYY-MM-DDTHH:MM"`. Die sichtbare
+Datumsspalte zeigt das Anlegedatum, bei erledigten Zeilen darunter zusätzlich
+`✓ Erledigungsdatum`. Beide Attribute werden gebraucht, weil „seit wann erledigt"
+und „seit wann offen" verschiedene Fragen sind — das Aufräumen unten hängt am
+Erledigungsdatum. Ältere Dateien ohne diese Attribute bleiben gültig: fehlt
+`data-erstellt`, gilt der Text der Datumsspalte; fehlt `data-erledigt`, hat die
+Zeile kein bekanntes Erledigungsdatum und wird vom Aufräumen **nie** erfasst.
+
+**Erledigte aus- und einblenden:** Der Knopf „✓ Erledigte ausblenden" blendet
+alle erledigten Zeilen aus, ohne sie anzufassen. Wirkt zusätzlich zu Suche und
+Filtern, Standard ist eingeblendet.
+
+**Aufräumen:** Der Knopf „🧹 Aufräumen" entfernt erledigte Todos, deren
+Erledigung mehr als einen Monat zurückliegt. Weil eine statische HTML sich nicht
+selbst speichern kann, entfernt der Knopf die Zeilen im Browser und lädt
+anschließend eine bereinigte `TODO.html` herunter, die die bestehende Datei
+ersetzen muss — ohne diesen Schritt sind die Zeilen beim nächsten Öffnen wieder
+da. Wer die Datei direkt an Ort und Stelle bereinigen will, nimmt
+`/todo-cleanup`.
 
 **Gruppieren:** Der Knopf „🗂 Gruppieren" in der HTML zeigt die Todos als
 Baum nach Kategorie › Unterkategorie an, statt als flache sortierbare
@@ -149,7 +171,9 @@ Parameter:
 
 Generiert die nächste freie `TNNN`-ID (höchste vorhandene Nummer + 1, gleiche
 Ziffernanzahl solange die Zählung das hergibt) und fügt eine neue `<tr>`-Zeile
-im `<tbody id="todoBody">` ein. Datum = heute.
+im `<tbody id="todoBody">` ein. Setzt `data-erstellt` auf den aktuellen
+Zeitpunkt (`YYYY-MM-DDTHH:MM`) und die sichtbare Datumsspalte auf das heutige
+Datum. `data-erledigt` bleibt weg, solange das Todo offen ist.
 
 ### `/todo-close <id>` — Todo als erledigt markieren
 
@@ -157,6 +181,9 @@ Beispiel: `/todo-close T004`
 
 Ändert in der TODO.html:
 - `data-status="done"`
+- `data-erledigt` auf den aktuellen Zeitpunkt (`YYYY-MM-DDTHH:MM`) setzen —
+  **nicht vergessen**, sonst wird die Zeile vom Aufräumen nie erfasst
+- In der Datumsspalte `<span class="datum-erledigt">✓ YYYY-MM-DD</span>` ergänzen
 - Badge-Klasse → `s-done`, Text → `✓ Erledigt`
 - Zeile bekommt Klasse `row-done`
 - `titel-col` erhält Durchstreichung via CSS (automatisch durch row-done)
@@ -171,6 +198,10 @@ Prüft die TODO.html auf:
 - **Kein Vorkommen des Altformats mehr** — IDs mit Bindestrich (`T-\d+`) oder
   das alte Attribut `data-kat`. Findet sich eines, `/todo-migrate` vorschlagen.
 - Alle Badge-Klassen sind bekannte Klassen (`s-*`, `p-*`, `k-cat`, `k-subcat`)
+- **Zeitstempel:** jede Zeile hat `data-erstellt`; jede Zeile mit
+  `data-status="done"` hat zusätzlich `data-erledigt`. Fehlende Werte melden
+  (sie sind kein Fehler in Altdateien, verhindern aber das Aufräumen) und
+  anbieten, sie aus der sichtbaren Datumsspalte nachzutragen.
 - Nächste freie ID ausgeben
 - Statistik: Offen / In Arbeit / Erledigt / Gesamt, sowie Anzahl verschiedener
   Kategorien und Unterkategorien
@@ -212,21 +243,58 @@ Ablauf:
    bleibt unverändert. `data-unterkategorie` bleibt für migrierte Zeilen
    zunächst weg — Unterkategorien sind eine neue Möglichkeit, keine Pflicht,
    und werden bei Bedarf später ergänzt.
-5. **Notizen unverändert lassen:** bestehender Freitext bleibt gültiger
+5. **Zeitstempel nachtragen:** Für jede Zeile `data-erstellt` aus der
+   sichtbaren Datumsspalte ableiten (`YYYY-MM-DD` → `YYYY-MM-DDT00:00`).
+   `data-erledigt` lässt sich aus Altdaten **nicht** rekonstruieren — es gibt
+   dort kein Erledigungsdatum. Erledigte Zeilen bleiben deshalb ohne dieses
+   Attribut und werden vom Aufräumen nie erfasst. Das ist beabsichtigt: lieber
+   eine alte Zeile zu viel behalten als eine fälschlich entfernen. Dem Nutzer
+   anbieten, für erledigte Altzeilen ersatzweise das Anlegedatum als
+   Erledigungsdatum zu setzen — nur auf ausdrücklichen Wunsch, weil es eine
+   Schätzung ist.
+6. **Notizen unverändert lassen:** bestehender Freitext bleibt gültiger
    Klartext. Die `<details>`-Kurz-/Lang-Form ist optional und wird nicht
    nachträglich erzwungen.
-6. **Nach der reinen Struktur-Umstellung** dem Nutzer anbieten, thematisch
+7. **Nach der reinen Struktur-Umstellung** dem Nutzer anbieten, thematisch
    verwandte Todos in neue, sprechendere Kategorien umzuhängen (z. B. alle
    `backend`-Zeilen, die inhaltlich um Sicherheit oder Datenschutz kreisen,
    in eine eigene Kategorie „Sicherheit"/„Datenschutz" verschieben) — das
    aber nur **vorschlagen**, nicht automatisch tun, weil es inhaltliches
    Wissen über die einzelnen Todos braucht, das eine reine Struktur-Migration
    nicht hat.
-7. **Validieren:** Anzahl `<tr>` mit `id-col` vorher == nachher (keine Zeile
+8. **Validieren:** Anzahl `<tr>` mit `id-col` vorher == nachher (keine Zeile
    verloren, keine doppelt). Danach `/todo-debug` durchlaufen lassen.
-8. **Bericht:** Anzahl migrierter Zeilen, welche Kategorien jetzt vorhanden
+9. **Bericht:** Anzahl migrierter Zeilen, welche Kategorien jetzt vorhanden
    sind, was optional noch zu tun ist (Unterkategorien ergänzen, Kategorien
    umbenennen/bündeln).
+
+### `/todo-cleanup` — Alte erledigte Todos aus der Datei entfernen
+
+Das Gegenstück zum Knopf „🧹 Aufräumen" in der HTML, aber direkt an der Datei —
+ohne Browser, ohne Download, ohne Ersetzen von Hand. Sinnvoll, wenn die Liste
+über Monate gewachsen ist.
+
+Ablauf:
+1. **Sicherung anlegen:** Kopiere die Datei nach
+   `<pfad>.vor-cleanup-<YYYY-MM-DD>`. Ohne diese Kopie nicht fortfahren.
+2. **Stichtag bestimmen:** einen Monat vor heute. Über ein Argument
+   veränderbar, z. B. `/todo-cleanup 3monate` oder `/todo-cleanup 2026-01-01`.
+3. **Kandidaten sammeln:** alle `<tr>` mit `data-status="done"`, deren
+   `data-erledigt` gesetzt, parsbar und älter als der Stichtag ist. Zeilen ohne
+   `data-erledigt` werden **nie** erfasst — im Zweifel bleibt eine Zeile stehen.
+4. **Vorlegen statt einfach löschen:** ID, Titel und Erledigungsdatum der
+   Kandidaten auflisten und bestätigen lassen. Bei mehr als 20 Treffern nur die
+   ersten 20 zeigen und die Gesamtzahl nennen.
+5. **Entfernen** und Ergebnis prüfen: Zeilenzahl vorher minus Kandidaten muss
+   der Zeilenzahl nachher entsprechen. Danach `/todo-debug` durchlaufen lassen.
+6. **Bericht:** wie viele Zeilen entfernt wurden, welche IDs, wo die Sicherung
+   liegt.
+
+> Entfernte IDs werden **nicht** neu vergeben. Die Zählung läuft weiter bei der
+> höchsten je genutzten Nummer, damit alte Querverweise („siehe T042") nicht
+> plötzlich auf ein fremdes Todo zeigen. `/todo-add` leitet die nächste ID
+> deshalb nicht allein aus den vorhandenen Zeilen ab, sondern berücksichtigt
+> auch die Sicherungsdateien im TODO-Ordner, falls vorhanden.
 
 ### `/todo-sync` — Aus Projekt-Quellen synchronisieren
 
@@ -265,7 +333,9 @@ Jede Zeile hat folgende data-Attribute für Filter/Sort:
 <tr data-status="offen|progress|done"
     data-prio="kritisch|hoch|mittel|niedrig"
     data-kategorie="beliebiger-freitext-slug"
-    data-unterkategorie="optional-auch-freitext">
+    data-unterkategorie="optional-auch-freitext"
+    data-erstellt="YYYY-MM-DDTHH:MM"
+    data-erledigt="YYYY-MM-DDTHH:MM">
   <td class="id-col">TNNN</td>
   <td class="titel-col">Titel des Todos</td>
   <td><span class="badge k-cat">Kategorie</span> <span class="crumb-sep">›</span> <span class="badge k-subcat">Unterkategorie</span></td>
@@ -273,14 +343,15 @@ Jede Zeile hat folgende data-Attribute für Filter/Sort:
   <td><span class="badge s-STATUS">Status</span></td>
   <td class="quelle-col">Quelle</td>
   <td class="notizen-col">Kurzer Text — oder <details><summary>Kurzbeschreibung</summary>Langbeschreibung…</details></td>
-  <td class="datum-col">YYYY-MM-DD</td>
+  <td class="datum-col">YYYY-MM-DD<span class="datum-erledigt">✓ YYYY-MM-DD</span></td>
 </tr>
 ```
 
 `data-unterkategorie` und der zugehörige `crumb-sep`/`k-subcat`-Teil in der
 Kategorie-Zelle entfallen komplett, wenn ein Todo keine Unterkategorie hat.
 
-Erledigte Zeilen haben zusätzlich `class="row-done"` auf dem `<tr>`.
+`data-erledigt` und das `datum-erledigt`-Span stehen **nur** bei erledigten
+Zeilen. Erledigte Zeilen haben zusätzlich `class="row-done"` auf dem `<tr>`.
 
 ---
 
@@ -290,8 +361,15 @@ Erledigte Zeilen haben zusätzlich `class="row-done"` auf dem `<tr>`.
   API-Keys, personenbezogene Daten.
 - **Keine externen Dependencies**: TODO.html ist vollständig self-contained
   (inline CSS + JS, keine CDN-Links).
-- **Niemals löschen**: Todos werden nur als "done" markiert, nie aus der HTML entfernt.
-  Vollständige Nachvollziehbarkeit.
+- **Offene Todos nie löschen**: Ein Todo verschwindet nicht, weil es unbequem
+  ist — es wird auf "done" gesetzt. Wer eine Zeile für gegenstandslos hält,
+  markiert sie als erledigt und schreibt den Grund in die Notiz.
+- **Erledigtes darf altern**: Erledigte Todos dürfen nach einer Aufbewahrungs-
+  frist raus (Knopf „🧹 Aufräumen" oder `/todo-cleanup`, Standard ein Monat ab
+  Erledigung). Beide Wege legen vorher eine Sicherung an — der Knopf als
+  Download der bereinigten Datei, `/todo-cleanup` als Kopie neben der Datei.
+  Zeilen ohne Erledigungsdatum werden dabei nie erfasst. IDs werden nach dem
+  Entfernen nicht neu vergeben.
 - **Lokal first**: TODO.html bleibt im Repo (committed), PlayTest-Artefakte bleiben lokal.
 
 ---

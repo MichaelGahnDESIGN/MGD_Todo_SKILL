@@ -75,6 +75,7 @@ codex --instructions .codex/commands/todo.md "/todo"
 | `/todo-sync` | Importiert neue Todos aus Projekt-Quellen (PlayTest, CODEX-TASKS, …) |
 | `/todo-debug` | Validiert die HTML-Struktur, findet kaputte Einträge |
 | `/todo-migrate` | Bringt eine bestehende TODO.html vom Alt- aufs aktuelle Format |
+| `/todo-cleanup` | Entfernt erledigte Todos, deren Erledigung länger zurückliegt (Standard: ein Monat) |
 | `/todo-export` | Markdown-Export aller offenen Todos |
 
 > [!TIP]

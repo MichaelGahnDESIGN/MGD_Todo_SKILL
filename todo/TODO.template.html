@@ -133,6 +133,31 @@
   .btn-reset:hover, .btn-group:hover { border-color: var(--accent); color: var(--accent); }
   .btn-group.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 
+  .btn-toggle-done {
+    padding: 7px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-toggle-done:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-toggle-done.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+
+  .btn-cleanup {
+    padding: 7px 14px;
+    background: transparent;
+    border: 1px solid var(--red);
+    border-radius: 6px;
+    color: var(--red);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-cleanup:hover { background: rgba(231,76,107,.12); }
+
   /* ── MAIN ── */
   main { padding: 20px 24px; }
   .no-results {
@@ -223,6 +248,7 @@
   td.titel-col { font-weight: 500; max-width: 280px; }
   td.notizen-col { color: var(--muted); font-size: 12px; max-width: 260px; }
   td.datum-col { white-space: nowrap; color: var(--muted); font-size: 11px; }
+  .datum-erledigt { font-size: 11px; color: var(--muted); display: block; }
   td.quelle-col { font-size: 11px; color: var(--muted); white-space: nowrap; }
 
   /* ── KURZ-/LANGBESCHREIBUNG (notizen-col) ──
@@ -322,7 +348,9 @@
     <select id="filterSub">
       <option value="">Unterkategorie: Alle</option>
     </select>
+    <button class="btn-toggle-done" id="btnDoneToggle" title="Erledigte Todos ein- oder ausblenden">✓ Erledigte ausblenden</button>
     <button class="btn-group" id="btnGroup" title="Nach Kategorie › Unterkategorie gruppieren">🗂 Gruppieren</button>
+    <button class="btn-cleanup" id="btnCleanup" title="Erledigte Todos entfernen, deren Erledigungsdatum mehr als einen Monat zurückliegt">🧹 Aufräumen</button>
     <button class="btn-reset" id="btnReset">↺ Reset</button>
   </div>
 </header>
@@ -360,9 +388,16 @@
      Für mehr Kontext <details><summary>Kurzbeschreibung</summary>
      Langbeschreibung…</details> verwenden — die Kurzbeschreibung bleibt
      immer sichtbar, die Langbeschreibung klappt auf Klick auf.
+
+     data-erstellt: Anlegezeitpunkt im Format YYYY-MM-DDTHH:MM. Fehlt das
+                    Attribut, gilt der Textinhalt der datum-col-Spalte als
+                    Anlegedatum.
+     data-erledigt: Erledigungszeitpunkt im Format YYYY-MM-DDTHH:MM, wird
+                    NUR bei data-status="done" gesetzt. Zeilen ohne dieses
+                    Attribut werden von der Aufräumen-Funktion niemals erfasst.
      ══════════════════════════════════════════════════════════════════ -->
 
-<tr data-status="offen" data-prio="hoch" data-kategorie="beispiel">
+<tr data-status="offen" data-prio="hoch" data-kategorie="beispiel" data-erstellt="2026-06-16T09:00">
   <td class="id-col">T001</td>
   <td class="titel-col">Beispiel-Todo: Ersten echten Todo eintragen</td>
   <td><span class="badge k-cat">Beispiel</span></td>
@@ -373,7 +408,7 @@
   <td class="datum-col">2026-06-16</td>
 </tr>
 
-<tr data-status="offen" data-prio="mittel" data-kategorie="beispiel" data-unterkategorie="mit-details">
+<tr data-status="offen" data-prio="mittel" data-kategorie="beispiel" data-unterkategorie="mit-details" data-erstellt="2026-06-16T09:05">
   <td class="id-col">T002</td>
   <td class="titel-col">Beispiel-Todo: Kategorie mit Unterkategorie und ausklappbaren Notizen</td>
   <td><span class="badge k-cat">Beispiel</span> <span class="crumb-sep">›</span> <span class="badge k-subcat">Mit Details</span></td>
@@ -382,6 +417,17 @@
   <td class="quelle-col">Manuell</td>
   <td class="notizen-col"><details><summary>Kurzbeschreibung: eine Zeile, die beim Überfliegen reicht.</summary>Langbeschreibung: hier steht der ausführliche Kontext, der beim schnellen Scannen der Liste nicht stört, aber per Klick verfügbar ist — z. B. Belege, Datei:Zeile-Referenzen, Entscheidungsgründe.</details></td>
   <td class="datum-col">2026-06-16</td>
+</tr>
+
+<tr class="row-done" data-status="done" data-prio="niedrig" data-kategorie="beispiel" data-erstellt="2026-06-16T09:10" data-erledigt="2026-07-01T10:00">
+  <td class="id-col">T003</td>
+  <td class="titel-col">Beispiel-Todo: Erledigtes Beispiel für die Aufräumen-Funktion</td>
+  <td><span class="badge k-cat">Beispiel</span></td>
+  <td><span class="badge p-niedrig">Niedrig</span></td>
+  <td><span class="badge s-done">✓ Erledigt</span></td>
+  <td class="quelle-col">Manuell</td>
+  <td class="notizen-col">Dieser Eintrag zeigt, wie eine erledigte Zeile mit Erledigungsdatum aussieht.</td>
+  <td class="datum-col">2026-06-16<span class="datum-erledigt">✓ 2026-07-01</span></td>
 </tr>
 
       </tbody>
@@ -408,11 +454,22 @@
   const fKat    = document.getElementById('filterKat');
   const fSub    = document.getElementById('filterSub');
   const btnGroup= document.getElementById('btnGroup');
+  const btnDoneToggle = document.getElementById('btnDoneToggle');
+  const btnCleanup    = document.getElementById('btnCleanup');
   const noRes   = document.getElementById('noResults');
   const ths     = document.querySelectorAll('thead th[data-col]');
 
   let sortCol = -1, sortAsc = true;
   let grouped = false;
+  let hideDone = false;
+
+  /* ── ZEITSTEMPEL ── */
+  function parseStamp(tr, attr) {
+    const v = tr.dataset[attr];
+    if (!v) return null;
+    const d = new Date(v);
+    return isNaN(d.getTime()) ? null : d;
+  }
 
   // Nur echte Todo-Zeilen -- Gruppen-Kopfzeilen werden bei jedem Render
   // entfernt und bei Bedarf neu eingefügt, zählen hier also nie mit.
@@ -468,7 +525,8 @@
       const matchPr = !pr || tr.dataset.prio   === pr;
       const matchKt = !kt || tr.dataset.kategorie === kt;
       const matchSb = !sb || tr.dataset.unterkategorie === sb;
-      const show = matchQ && matchSt && matchPr && matchKt && matchSb;
+      const matchDone = !hideDone || tr.dataset.status !== 'done';
+      const show = matchQ && matchSt && matchPr && matchKt && matchSb && matchDone;
       tr.classList.toggle('hidden', !show);
       if (show) visible++;
     });
@@ -555,6 +613,85 @@
     applyFilters();
   }
 
+  /* ── ERLEDIGTE EIN-/AUSBLENDEN ── */
+  function toggleDone() {
+    hideDone = !hideDone;
+    btnDoneToggle.classList.toggle('active', hideDone);
+    btnDoneToggle.textContent = hideDone ? '✓ Erledigte einblenden' : '✓ Erledigte ausblenden';
+    applyFilters();
+  }
+
+  /* ── AUFRÄUMEN: erledigte Todos älter als ein Monat entfernen ── */
+  function serialisieren() {
+    const doc = document.documentElement.cloneNode(true);
+    doc.querySelectorAll('tr.group-header').forEach(el => el.remove());
+    doc.querySelectorAll('.hidden').forEach(el => el.classList.remove('hidden'));
+    doc.querySelectorAll('th.asc, th.desc').forEach(el => el.classList.remove('asc', 'desc'));
+    const kBtnGroup = doc.querySelector('#btnGroup');
+    if (kBtnGroup) kBtnGroup.classList.remove('active');
+    const kBtnDoneToggle = doc.querySelector('#btnDoneToggle');
+    if (kBtnDoneToggle) {
+      kBtnDoneToggle.classList.remove('active');
+      kBtnDoneToggle.textContent = '✓ Erledigte ausblenden';
+    }
+    const kTable = doc.querySelector('#todoTable');
+    if (kTable) kTable.classList.remove('grouped');
+    const kSearch = doc.querySelector('#searchInput');
+    if (kSearch) kSearch.removeAttribute('value');
+    ['#filterStatus', '#filterPrio'].forEach(sel => {
+      const el = doc.querySelector(sel);
+      if (el) el.querySelectorAll('option').forEach(o => o.removeAttribute('selected'));
+    });
+    const kFilterKat = doc.querySelector('#filterKat');
+    if (kFilterKat) kFilterKat.innerHTML = '<option value="">Kategorie: Alle</option>';
+    const kFilterSub = doc.querySelector('#filterSub');
+    if (kFilterSub) kFilterSub.innerHTML = '<option value="">Unterkategorie: Alle</option>';
+    const kNoRes = doc.querySelector('#noResults');
+    if (kNoRes) kNoRes.classList.remove('visible');
+    return '<!doctype html>\n' + doc.outerHTML;
+  }
+
+  function cleanupOldDone() {
+    const grenze = new Date();
+    grenze.setMonth(grenze.getMonth() - 1);
+
+    const kandidaten = rows().filter(tr => {
+      if (tr.dataset.status !== 'done') return false;
+      const erledigt = parseStamp(tr, 'erledigt');
+      return erledigt !== null && erledigt < grenze;
+    });
+
+    if (kandidaten.length === 0) {
+      alert('Keine erledigten Todos, die älter als ein Monat sind.');
+      return;
+    }
+
+    const ok = confirm(
+      kandidaten.length + ' erledigte Todo(s) sind älter als ein Monat und werden entfernt.\n' +
+      'Danach wird eine bereinigte Datei heruntergeladen, die die bestehende TODO.html ersetzen muss. Fortfahren?'
+    );
+    if (!ok) return;
+
+    kandidaten.forEach(tr => tr.remove());
+
+    const html = serialisieren();
+    const blob = new Blob([html], { type: 'text/html' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = 'TODO.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    populateKatOptions();
+    populateSubOptions();
+    applyFilters();
+
+    alert('Die heruntergeladene TODO.html muss die bestehende Datei ersetzen, sonst tauchen die entfernten Zeilen beim nächsten Öffnen wieder auf.');
+  }
+
   /* ── STATS ── */
   function updateStats() {
     const all = rows();
@@ -573,10 +710,15 @@
   fKat.addEventListener('change', () => { populateSubOptions(); applyFilters(); });
   fSub.addEventListener('change', applyFilters);
   btnGroup.addEventListener('click', toggleGroup);
+  btnDoneToggle.addEventListener('click', toggleDone);
+  btnCleanup.addEventListener('click', cleanupOldDone);
   ths.forEach(th => th.addEventListener('click', () => sortTable(+th.dataset.col)));
   document.getElementById('btnReset').addEventListener('click', () => {
     search.value = '';
     fStatus.value = fPrio.value = fKat.value = fSub.value = '';
+    hideDone = false;
+    btnDoneToggle.classList.remove('active');
+    btnDoneToggle.textContent = '✓ Erledigte ausblenden';
     populateSubOptions();
     if (grouped) toggleGroup(); else applyFilters();
     ths.forEach(th => th.classList.remove('asc', 'desc'));

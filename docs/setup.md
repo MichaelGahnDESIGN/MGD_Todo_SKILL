@@ -95,6 +95,24 @@ stellt IDs auf `TNNN` um (auch in Querverweisen wie „siehe T-042"),
 bestehenden Kategorien als Ausgangspunkt bei — Umbenennen oder Bündeln zu
 neuen, freier gewählten Kategorien ist danach optional.
 
+## Erledigte aufräumen
+
+Erledigte Todos sammeln sich mit der Zeit an. Zwei Wege, sie loszuwerden:
+
+- **Knopf „🧹 Aufräumen" in der HTML** — entfernt erledigte Todos, deren
+  Erledigung mehr als einen Monat zurückliegt, und lädt danach eine bereinigte
+  `TODO.html` herunter. **Diese Datei muss die bestehende ersetzen**, sonst sind
+  die Zeilen beim nächsten Öffnen wieder da: eine im Browser geöffnete HTML kann
+  sich nicht selbst überschreiben.
+- **`/todo-cleanup`** — macht dasselbe direkt an der Datei, mit Sicherungskopie
+  daneben. Zeitraum wählbar, z. B. `/todo-cleanup 3monate`.
+
+Beide erfassen **nur** Zeilen mit gesetztem `data-erledigt`. Aus einer
+migrierten Altdatei fehlt dieses Datum, solche Zeilen bleiben also stehen.
+
+Wer erledigte Todos nur vorübergehend loswerden will, nimmt den Knopf
+„✓ Erledigte ausblenden" — der ändert nichts an der Datei.
+
 ## HTML im Browser öffnen
 
 Einfach `TODO.html` im Browser öffnen (Doppelklick oder via `open PROJEKT/TODO/TODO.html`).

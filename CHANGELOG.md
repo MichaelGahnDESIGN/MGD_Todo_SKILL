@@ -4,6 +4,43 @@ Versionsnummern folgen [Semantic Versioning](https://semver.org/lang/de/):
 MAJOR bei Breaking Changes am HTML-/ID-Format, MINOR bei neuen Fähigkeiten
 ohne Breaking Change, PATCH bei Fehlerbehebungen.
 
+## 1.1.0 — 2026-09-01
+
+### Neu
+
+- **Zeitstempel an jedem Todo.** Neue Attribute `data-erstellt` (Anlegen) und
+  `data-erledigt` (Erledigung, nur bei done-Zeilen), jeweils
+  `YYYY-MM-DDTHH:MM`. Die Datumsspalte zeigt bei erledigten Zeilen zusätzlich
+  `✓ Erledigungsdatum`. Ältere Dateien ohne diese Attribute bleiben gültig:
+  fehlt `data-erstellt`, gilt der Text der Datumsspalte.
+- **Erledigte aus- und einblenden.** Neuer Knopf „✓ Erledigte ausblenden" in
+  der HTML. Wirkt zusätzlich zu Suche und Filtern, ändert nichts an der Datei,
+  Standard ist eingeblendet.
+- **Aufräum-Knopf „🧹 Aufräumen".** Entfernt erledigte Todos, deren Erledigung
+  mehr als einen Monat zurückliegt. Da eine im Browser geöffnete HTML sich nicht
+  selbst speichern kann, entfernt der Knopf die Zeilen in der Ansicht und lädt
+  anschließend eine bereinigte `TODO.html` herunter, die die bestehende Datei
+  ersetzen muss. Zeilen ohne `data-erledigt` werden nie erfasst.
+- **`/todo-cleanup`** — dasselbe Aufräumen direkt an der Datei, mit
+  Sicherungskopie und wählbarem Zeitraum (`/todo-cleanup 3monate`).
+
+### Geändert
+
+- **Sicherheitsregel „Niemals löschen" geschärft.** Sie galt bisher pauschal und
+  hätte das Aufräumen ausgeschlossen. Jetzt getrennt: *offene* Todos werden nie
+  gelöscht, *erledigte* dürfen nach einer Aufbewahrungsfrist raus — mit
+  Sicherung, ohne Neuvergabe der IDs.
+- `/todo-add` setzt `data-erstellt`, `/todo-close` setzt `data-erledigt`.
+  `/todo-debug` prüft beide und meldet fehlende Werte. `/todo-migrate` trägt
+  `data-erstellt` aus der Datumsspalte nach; `data-erledigt` bleibt bei
+  Altzeilen bewusst leer, weil es sich nicht rekonstruieren lässt.
+
+### Behoben
+
+- **`.claude/commands/todo.md` und `.codex/commands/todo.md` liefen auseinander.**
+  Beide sind Kopien der `SKILL.md`, wurden aber in 1.0.1 nicht mitgezogen und
+  hingen eine Version zurück. Jetzt wieder deckungsgleich.
+
 ## 1.0.1 — 2026-09-01
 
 ### Behoben
