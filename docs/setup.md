@@ -57,6 +57,11 @@ Oder aus dem lokalen Klon:
 cp path/to/MGD-ToDo-SKILL/todo/TODO.template.html PROJEKT/TODO/TODO.html
 ```
 
+Die Vorlage enthält zwei Beispiel-Todos (`T001`/`T002`, Kategorie „beispiel"),
+die zeigen, wie eine Zeile mit und ohne Unterkategorie aussieht. **Beide Zeilen
+nach dem Kopieren löschen** — sonst stehen zwei Platzhalter in der Liste und das
+erste echte Todo bekommt `T003`. `/todo-setup` erledigt das automatisch.
+
 ## Pfad konfigurieren
 
 ```

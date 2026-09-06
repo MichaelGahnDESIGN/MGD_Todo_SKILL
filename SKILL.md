@@ -91,8 +91,15 @@ Ablauf:
    d. Passe den Titel in der HTML an (ersetze „PROJEKT TODO" / „PROJEKT — TODO"
       durch den Projektnamen, abgeleitet aus dem Verzeichnisnamen oder
       `package.json`/`pubspec.yaml`)
-   e. Schreibe den Pfad in `.todo-config`
-   f. Gib Erfolgsmeldung aus: Pfad, nächster Schritt (`/todo-add "Erstes Todo"`)
+   e. **Beispielzeilen entfernen:** Das Template liefert zwei Demo-Todos mit
+      (`data-kategorie="beispiel"`, IDs `T001`/`T002`) — beide `<tr>`-Blöcke
+      löschen, damit die Liste leer startet und das erste echte `/todo-add`
+      wieder `T001` vergibt. Den erklärenden Kommentarblock im
+      `<tbody id="todoBody">` **stehen lassen**: er dokumentiert das
+      Zeilenformat für spätere Handbearbeitung. Die Regel „niemals löschen"
+      gilt für echte Todos, nicht für die Platzhalter der Vorlage.
+   f. Schreibe den Pfad in `.todo-config`
+   g. Gib Erfolgsmeldung aus: Pfad, nächster Schritt (`/todo-add "Erstes Todo"`)
 
 Hinweis für Codex: Template via `curl` laden, Ordner via `mkdir -p` anlegen.
 

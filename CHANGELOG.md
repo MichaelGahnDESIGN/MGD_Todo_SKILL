@@ -4,6 +4,17 @@ Versionsnummern folgen [Semantic Versioning](https://semver.org/lang/de/):
 MAJOR bei Breaking Changes am HTML-/ID-Format, MINOR bei neuen Fähigkeiten
 ohne Breaking Change, PATCH bei Fehlerbehebungen.
 
+## 1.0.1 — 2026-09-01
+
+### Behoben
+
+- **`/todo-setup` ließ die Beispielzeilen der Vorlage stehen.** Die Vorlage
+  liefert zwei Demo-Todos (`T001`/`T002`, Kategorie „beispiel"), aber weder
+  `SKILL.md` noch `docs/setup.md` sagten, was damit geschehen soll. Wer sie
+  stehen ließ, hatte zwei Platzhalter in der Liste, und das erste echte
+  `/todo-add` vergab `T003` statt `T001`. `/todo-setup` entfernt beide Zeilen
+  jetzt ausdrücklich und behält den erklärenden Kommentarblock im `tbody`.
+
 ## 1.0.0 — 2026-09-06
 
 ### Breaking Changes
