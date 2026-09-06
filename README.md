@@ -1,6 +1,12 @@
 # MGD — ToDo SKILL
 
-Ein universeller Skill für KI-Agenten (Claude Code & ChatGPT Codex), der Projekt-Todos in einer **selbst-gehosteten, sortierbaren und durchsuchbaren `TODO.html`** verwaltet — ohne externe Services, ohne Datenbank, vollständig im eigenen Repo.
+Ein universeller Skill für KI-Agenten (Claude Code & ChatGPT Codex), der Projekt-Todos in einer **selbst-gehosteten, sortierbaren und durchsuchbaren `TODO.html`** verwaltet — mit frei anlegbaren Kategorien und Unterkategorien, ohne externe Services, ohne Datenbank, vollständig im eigenen Repo.
+
+> [!NOTE]
+> **👤 FÜR ENTWICKLER** — Version 1.0.0 ändert das Format: IDs heißen jetzt `TNNN`
+> statt `T-NNN`, und Kategorien sind Freitext statt eines festen Enums. Eine
+> bestehende `TODO.html` im alten Format läuft weiter, sollte aber per
+> `/todo-migrate` aufs neue Format gebracht werden — siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Das Problem
 
@@ -68,6 +74,7 @@ codex --instructions .codex/commands/todo.md "/todo"
 | `/todo-pfad <pfad>` | Setzt den Pfad zur TODO.html (gespeichert in `.todo-config`) |
 | `/todo-sync` | Importiert neue Todos aus Projekt-Quellen (PlayTest, CODEX-TASKS, …) |
 | `/todo-debug` | Validiert die HTML-Struktur, findet kaputte Einträge |
+| `/todo-migrate` | Bringt eine bestehende TODO.html vom Alt- aufs aktuelle Format |
 | `/todo-export` | Markdown-Export aller offenen Todos |
 
 > [!TIP]
@@ -75,20 +82,26 @@ codex --instructions .codex/commands/todo.md "/todo"
 
 ### HTML-Struktur
 
-Todos sind einfache `<tr>`-Zeilen mit data-Attributen:
+Todos sind einfache `<tr>`-Zeilen mit data-Attributen. Kategorie und
+Unterkategorie sind **Freitext** — keine feste Liste, anlegen was zum
+Projekt passt:
 
 ```html
-<tr data-status="offen" data-prio="hoch" data-kat="app">
-  <td class="id-col">T-001</td>
+<tr data-status="offen" data-prio="hoch" data-kategorie="sicherheit" data-unterkategorie="zugriffsrechte">
+  <td class="id-col">T001</td>
   <td class="titel-col">Mein Todo</td>
-  <td><span class="badge k-app">App-Feature</span></td>
+  <td><span class="badge k-cat">Sicherheit</span> <span class="crumb-sep">›</span> <span class="badge k-subcat">Zugriffsrechte</span></td>
   <td><span class="badge p-hoch">Hoch</span></td>
   <td><span class="badge s-offen">Offen</span></td>
   <td class="quelle-col">Manuell</td>
-  <td class="notizen-col">Optionale Notiz</td>
+  <td class="notizen-col"><details><summary>Kurzbeschreibung</summary>Ausführlicher Kontext, der auf Klick aufklappt.</details></td>
   <td class="datum-col">2026-06-16</td>
 </tr>
 ```
+
+Reiner Text in `notizen-col` bleibt weiterhin gültig — die `<details>`-Form
+ist nur eine Option für längere Notizen. `data-unterkategorie` (und der
+zugehörige Badge-Teil) entfallen ganz, wenn ein Todo keine Unterkategorie hat.
 
 **Status-Werte**
 
@@ -98,18 +111,43 @@ Todos sind einfache `<tr>`-Zeilen mit data-Attributen:
 | `progress` | `s-progress` | In Arbeit |
 | `done` | `s-done` | ✓ Erledigt |
 
-**Prioritäten**: `kritisch` (`p-kritisch`), `hoch` (`p-hoch`), `mittel` (`p-mittel`), `niedrig` (`p-niedrig`)
+**Prioritäten**: `kritisch` (`p-kritisch`), `hoch` (`p-hoch`), `mittel` (`p-mittel`), `niedrig` (`p-niedrig`) — feste Liste, unverändert.
 
-**Kategorien**: `app` (App-Feature), `editor` (Editor-Feature), `backend` (Backend/API), `infra` (Infrastruktur), `ux` (UX/Design), `playtest` (Test-Aufgaben), `doku` (Dokumentation)
+**Kategorien**: frei anlegbar (Badge-Klasse immer `k-cat`, Unterkategorie
+immer `k-subcat` — die Farbe kennzeichnet „Kategorie" vs. „Unterkategorie",
+nicht den konkreten Wert). Die Filter-Dropdowns in der HTML füllen sich
+beim Öffnen automatisch aus den vorkommenden Werten.
+
+**Gruppieren:** Der Knopf „🗂 Gruppieren" oben in der HTML zeigt alle Todos
+als Baum nach Kategorie › Unterkategorie an, statt als flache Liste —
+praktisch, um sich einen Überblick über ein wachsendes Projekt zu verschaffen.
 
 ### Export-Beispiel
 
 `/todo-export` gibt alle offenen Todos als Markdown-Tabelle aus:
 
 ```markdown
-| ID    | Titel | Prio | Kategorie | Status |
-|-------|-------|------|-----------|--------|
-| T-004 | Freunde-System (Backend + UI) | Hoch | App-Feature | Offen |
+| ID   | Titel | Prio | Kategorie | Status |
+|------|-------|------|-----------|--------|
+| T004 | Freunde-System (Backend + UI) | Hoch | Features › Sozial | Offen |
+```
+
+## Bestehende TODO.html migrieren
+
+Läuft bereits eine `TODO.html` im Altformat (IDs `T-NNN`, feste Kategorien
+`app|editor|backend|infra|ux|playtest|doku`)? Sie funktioniert unverändert
+weiter — für die neuen Möglichkeiten (freie Kategorien, Unterkategorien,
+Gruppieren-Ansicht, `TNNN`-IDs) einmalig `/todo-migrate` aufrufen. Der
+Befehl sichert die alte Datei automatisch vorher und ist wiederholbar
+gefahrlos, siehe [SKILL.md](SKILL.md#todo-migrate--bestehende-todohtml-aufs-aktuelle-format-bringen-einmalig-pro-projekt).
+
+Kurzfassung für andere Threads/Projekte, die den Skill aktualisieren sollen:
+
+```
+Aktualisiere den /todo-Skill auf die neueste Version von
+https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL (falls als Git-Klon
+vorhanden: git pull; sonst SKILL.md/TODO.template.html neu laden) und
+führe danach /todo-migrate auf der TODO.html dieses Projekts aus.
 ```
 
 ## Grenzen
@@ -159,6 +197,11 @@ Dieser Skill ist darauf ausgelegt, mit anderen KI-Skills zusammenzuarbeiten:
 | [MGD_AI-PlayTest_SKILL](https://github.com/MichaelGahnDESIGN/MGD_AI-PlayTest_SKILL) | Live-Playtest aus Nutzerperspektive |
 | [MGD_ProjectClean_SKILL](https://github.com/MichaelGahnDESIGN/MGD_ProjectClean_SKILL) | Abschluss- und Aufräum-Workflow |
 | [MGD_AI-Basic-Projektordner_TOOL](https://github.com/MichaelGahnDESIGN/MGD_AI-Basic-Projektordner_TOOL) | Projektvorlage für KI-Agenten |
+
+## Änderungen
+
+Siehe [CHANGELOG.md](CHANGELOG.md) für die Versionsgeschichte, insbesondere
+den Breaking-Change-Hinweis zu Version 1.0.0.
 
 ## Lizenz
 

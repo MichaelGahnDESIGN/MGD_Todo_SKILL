@@ -70,9 +70,25 @@ Oder manuell: Erstelle `PROJEKT/TODO/.todo-config` mit dem Pfad zur HTML-Datei (
 ```
 /todo            # Übersicht anzeigen
 /todo-add "Mein erstes richtiges Todo"
-/todo-close T-001
+/todo-close T001
 /todo-debug      # Strukturprüfung
 ```
+
+## Bestehendes Projekt vom Altformat migrieren
+
+Läuft im Projekt bereits eine `TODO.html` mit IDs im Format `T-001` (mit
+Bindestrich) und festen Kategorien (`app`/`editor`/`backend`/…)? Das ist
+das Format vor Version 1.0.0. Einmalig:
+
+```
+/todo-migrate
+```
+
+Das legt vorher eine Sicherungskopie an (`TODO.html.vor-migration-<datum>`),
+stellt IDs auf `TNNN` um (auch in Querverweisen wie „siehe T-042"),
+übernimmt Kopf/Filter/Skript aus der aktuellen Vorlage und behält alle
+bestehenden Kategorien als Ausgangspunkt bei — Umbenennen oder Bündeln zu
+neuen, freier gewählten Kategorien ist danach optional.
 
 ## HTML im Browser öffnen
 
@@ -110,4 +126,7 @@ Am Release-Ende:
 - **Nie löschen**: Todos nur als `done` markieren — so bleibt die Geschichte erhalten
 - **Secrets**: Niemals Passwörter, Tokens oder personenbezogene Daten in Todos schreiben
 - **Committen**: TODO.html versionieren — so sieht man in Git, wann was erledigt wurde
-- **IDs**: Sind fortlaufend (T-001, T-002, …) und werden nie wiederverwendet
+- **IDs**: Sind fortlaufend (T001, T002, …) und werden nie wiederverwendet
+- **Kategorien**: Sind Freitext — anlegen, was zum Projekt passt (z. B. „Sicherheit",
+  „Datenschutz", „Features"), optional mit Unterkategorie. Der Knopf „🗂 Gruppieren"
+  in der HTML zeigt sie als Baum an.

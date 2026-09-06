@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TINTLING — TODO</title>
+<title>PROJEKT — TODO</title>
 <style>
   :root {
     --bg:        #0d1117;
@@ -120,7 +120,7 @@
   }
   select:focus { border-color: var(--accent); }
 
-  .btn-reset {
+  .btn-reset, .btn-group {
     padding: 7px 14px;
     background: transparent;
     border: 1px solid var(--border);
@@ -130,7 +130,8 @@
     cursor: pointer;
     transition: all .15s;
   }
-  .btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-reset:hover, .btn-group:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-group.active { background: var(--accent); border-color: var(--accent); color: var(--bg); }
 
   /* ── MAIN ── */
   main { padding: 20px 24px; }
@@ -172,6 +173,9 @@
   thead th.asc::after  { content: ' ▲'; color: var(--accent); }
   thead th.desc::after { content: ' ▼'; color: var(--accent); }
   thead th:first-child { width: 70px; }
+  /* Im Gruppieren-Modus ist manuelles Spalten-Sortieren deaktiviert —
+     die Gruppierung bestimmt die Reihenfolge. */
+  table.grouped thead th { cursor: default; opacity: .55; pointer-events: none; }
 
   tbody tr {
     border-bottom: 1px solid var(--border);
@@ -183,6 +187,27 @@
   tbody tr.row-done:hover { background: rgba(63,185,80,.06); }
   tbody tr.row-done td { color: var(--muted); }
   tbody tr.hidden { display: none; }
+
+  /* Gruppen-Kopfzeilen (nur im Gruppieren-Modus eingefügt) */
+  tr.group-header td {
+    background: var(--bg2);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  tr.group-header.group-header-sub td {
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    padding-left: 26px;
+    background: var(--bg);
+  }
+  tr.group-header:hover { background: none !important; }
 
   td {
     padding: 10px 12px;
@@ -196,9 +221,24 @@
     white-space: nowrap;
   }
   td.titel-col { font-weight: 500; max-width: 280px; }
-  td.notizen-col { color: var(--muted); font-size: 12px; max-width: 220px; }
+  td.notizen-col { color: var(--muted); font-size: 12px; max-width: 260px; }
   td.datum-col { white-space: nowrap; color: var(--muted); font-size: 11px; }
   td.quelle-col { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+  /* ── KURZ-/LANGBESCHREIBUNG (notizen-col) ──
+     Ein Todo braucht keine <details> — reiner Text bleibt gültig, wenn
+     die Kurzbeschreibung reicht. Bei mehr Kontext: <summary> trägt die
+     Kurzbeschreibung (immer sichtbar), der Rest die ausklappbare
+     Langbeschreibung. */
+  td.notizen-col details summary {
+    color: var(--text);
+    cursor: pointer;
+    list-style: none;
+  }
+  td.notizen-col details summary::-webkit-details-marker { display: none; }
+  td.notizen-col details summary::before { content: '▸ '; color: var(--accent); }
+  td.notizen-col details[open] summary::before { content: '▾ '; }
+  td.notizen-col details[open] summary { margin-bottom: 6px; }
 
   /* ── BADGES ── */
   .badge {
@@ -219,14 +259,13 @@
   .p-hoch     { background: rgba(240,136,62,.15); color: var(--orange); border-color: rgba(240,136,62,.4); }
   .p-mittel   { background: rgba(212,168,85,.15); color: var(--accent); border-color: rgba(212,168,85,.4); }
   .p-niedrig  { background: rgba(125,133,144,.15);color: var(--muted);  border-color: rgba(125,133,144,.4);}
-  /* Kategorie */
-  .k-app      { background: rgba(163,113,247,.15);color: var(--purple); border-color: rgba(163,113,247,.4);}
-  .k-editor   { background: rgba(78,205,196,.15); color: var(--cyan);   border-color: rgba(78,205,196,.4); }
-  .k-backend  { background: rgba(212,168,85,.15); color: var(--accent); border-color: rgba(212,168,85,.4); }
-  .k-infra    { background: rgba(63,185,80,.15);  color: var(--green);  border-color: rgba(63,185,80,.4);  }
-  .k-ux       { background: rgba(231,76,107,.15); color: var(--red);    border-color: rgba(231,76,107,.4); }
-  .k-playtest { background: rgba(78,205,196,.15); color: var(--cyan);   border-color: rgba(78,205,196,.4); }
-  .k-doku     { background: rgba(125,133,144,.15);color: var(--muted);  border-color: rgba(125,133,144,.4);}
+  /* Kategorie/Unterkategorie — bewusst EINE Klasse für alle Werte: die
+     Kategorie ist Freitext (beliebig anlegbar), nicht mehr ein fester
+     Enum mit eigener Farbe je Wert. Die Unterscheidung liest sich über
+     den Text, nicht über die Farbe. */
+  .k-cat    { background: rgba(163,113,247,.15); color: var(--purple); border-color: rgba(163,113,247,.4); }
+  .k-subcat { background: rgba(125,133,144,.15); color: var(--muted);  border-color: rgba(125,133,144,.4); font-weight: 500; }
+  .crumb-sep { color: var(--muted); margin: 0 3px; font-size: 10px; }
 
   .done-icon { opacity: .4; font-size: 12px; }
   .row-done td.titel-col { text-decoration: line-through; text-decoration-color: var(--muted); }
@@ -247,7 +286,7 @@
 
 <header class="site-header">
   <div class="header-top">
-    <div class="site-title">TINTLING TODO <span>— gepflegt von Claude Code &amp; Codex</span></div>
+    <div class="site-title">PROJEKT TODO <span>— gepflegt von Claude Code &amp; Codex</span></div>
     <div class="stats-bar">
       <span class="stat-chip total" id="stat-total">0 Gesamt</span>
       <span class="stat-chip open"  id="stat-open">0 Offen</span>
@@ -274,16 +313,16 @@
       <option value="mittel">Mittel</option>
       <option value="niedrig">Niedrig</option>
     </select>
+    <!-- Kategorie/Unterkategorie sind Freitext -- die Optionen werden beim
+         Laden aus den vorhandenen data-kategorie/data-unterkategorie-Werten
+         der Tabelle erzeugt, nicht fest vorgegeben. -->
     <select id="filterKat">
       <option value="">Kategorie: Alle</option>
-      <option value="app">App-Feature</option>
-      <option value="editor">Editor-Feature</option>
-      <option value="backend">Backend</option>
-      <option value="infra">Infra</option>
-      <option value="ux">UX</option>
-      <option value="playtest">Playtest</option>
-      <option value="doku">Dokumentation</option>
     </select>
+    <select id="filterSub">
+      <option value="">Unterkategorie: Alle</option>
+    </select>
+    <button class="btn-group" id="btnGroup" title="Nach Kategorie › Unterkategorie gruppieren">🗂 Gruppieren</button>
     <button class="btn-reset" id="btnReset">↺ Reset</button>
   </div>
 </header>
@@ -304,21 +343,44 @@
         </tr>
       </thead>
       <tbody id="todoBody">
-<!-- ══════════════════════════════════════════════════════
-     TODOS — fortlaufend ergänzen, niemals löschen.
-     Status: offen | progress | done
-     Prio:   kritisch | hoch | mittel | niedrig
-     Kat:    app | editor | backend | infra | ux | playtest | doku
-     ══════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════════════════
+     TODOS — fortlaufend ergänzen, niemals löschen (nur data-status auf
+     "done" setzen und Klasse "row-done" ergänzen).
 
-<tr data-status="offen" data-prio="hoch" data-kat="app">
-  <td class="id-col">T-001</td>
+     ID:              TNNN, fortlaufend, ohne Bindestrich (T001, T002, …)
+     Status:          offen | progress | done
+     Priorität:       kritisch | hoch | mittel | niedrig
+     Kategorie:       Freitext-Slug, frei anlegbar (z. B. sicherheit,
+                       datenschutz, features, backend, …) — data-kategorie
+     Unterkategorie:  optional, Freitext-Slug, gehört zu einer Kategorie
+                       (z. B. zugriffsrechte unter sicherheit) — data-unterkategorie
+                       Attribut ganz weglassen, wenn nicht gebraucht.
+
+     Notizen-Spalte: reiner Text reicht, wenn eine Kurzbeschreibung genügt.
+     Für mehr Kontext <details><summary>Kurzbeschreibung</summary>
+     Langbeschreibung…</details> verwenden — die Kurzbeschreibung bleibt
+     immer sichtbar, die Langbeschreibung klappt auf Klick auf.
+     ══════════════════════════════════════════════════════════════════ -->
+
+<tr data-status="offen" data-prio="hoch" data-kategorie="beispiel">
+  <td class="id-col">T001</td>
   <td class="titel-col">Beispiel-Todo: Ersten echten Todo eintragen</td>
-  <td><span class="badge k-app">App-Feature</span></td>
+  <td><span class="badge k-cat">Beispiel</span></td>
   <td><span class="badge p-hoch">Hoch</span></td>
   <td><span class="badge s-offen">Offen</span></td>
   <td class="quelle-col">Manuell</td>
   <td class="notizen-col">Diesen Eintrag ersetzen oder mit /todo-add neue Todos hinzufügen.</td>
+  <td class="datum-col">2026-06-16</td>
+</tr>
+
+<tr data-status="offen" data-prio="mittel" data-kategorie="beispiel" data-unterkategorie="mit-details">
+  <td class="id-col">T002</td>
+  <td class="titel-col">Beispiel-Todo: Kategorie mit Unterkategorie und ausklappbaren Notizen</td>
+  <td><span class="badge k-cat">Beispiel</span> <span class="crumb-sep">›</span> <span class="badge k-subcat">Mit Details</span></td>
+  <td><span class="badge p-mittel">Mittel</span></td>
+  <td><span class="badge s-offen">Offen</span></td>
+  <td class="quelle-col">Manuell</td>
+  <td class="notizen-col"><details><summary>Kurzbeschreibung: eine Zeile, die beim Überfliegen reicht.</summary>Langbeschreibung: hier steht der ausführliche Kontext, der beim schnellen Scannen der Liste nicht stört, aber per Klick verfügbar ist — z. B. Belege, Datei:Zeile-Referenzen, Entscheidungsgründe.</details></td>
   <td class="datum-col">2026-06-16</td>
 </tr>
 
@@ -331,31 +393,72 @@
 </main>
 
 <footer>
-  TINTLING TODO &mdash; Pfad: <code>PROJEKT/TODO/TODO.html</code> &mdash;
+  PROJEKT TODO &mdash; Pfad: <code>PROJEKT/TODO/TODO.html</code> &mdash;
   Gepflegt mit <a href="https://claude.ai/code">Claude Code</a> &amp; ChatGPT Codex &mdash;
   <a href="https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL">MGD-ToDo-SKILL on GitHub</a>
 </footer>
 
 <script>
 (function () {
+  const table   = document.getElementById('todoTable');
   const tbody   = document.getElementById('todoBody');
   const search  = document.getElementById('searchInput');
   const fStatus = document.getElementById('filterStatus');
   const fPrio   = document.getElementById('filterPrio');
   const fKat    = document.getElementById('filterKat');
+  const fSub    = document.getElementById('filterSub');
+  const btnGroup= document.getElementById('btnGroup');
   const noRes   = document.getElementById('noResults');
   const ths     = document.querySelectorAll('thead th[data-col]');
 
   let sortCol = -1, sortAsc = true;
+  let grouped = false;
 
-  function rows() { return Array.from(tbody.querySelectorAll('tr')); }
+  // Nur echte Todo-Zeilen -- Gruppen-Kopfzeilen werden bei jedem Render
+  // entfernt und bei Bedarf neu eingefügt, zählen hier also nie mit.
+  function rows() { return Array.from(tbody.querySelectorAll('tr:not(.group-header)')); }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  /* ── FREIE KATEGORIEN: Filter-Optionen aus den Daten ableiten ── */
+  function collectValues(attr, onlyWithinKat) {
+    const set = new Set();
+    rows().forEach(r => {
+      if (onlyWithinKat && fKat.value && r.dataset.kategorie !== fKat.value) return;
+      const v = r.dataset[attr];
+      if (v) set.add(v);
+    });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'de'));
+  }
+
+  function populateKatOptions() {
+    const cur = fKat.value;
+    const cats = collectValues('kategorie', false);
+    fKat.innerHTML = '<option value="">Kategorie: Alle</option>' +
+      cats.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    if (cats.includes(cur)) fKat.value = cur;
+  }
+
+  function populateSubOptions() {
+    const cur = fSub.value;
+    const subs = collectValues('unterkategorie', true);
+    fSub.innerHTML = '<option value="">Unterkategorie: Alle</option>' +
+      subs.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+    if (subs.includes(cur)) fSub.value = cur;
+  }
 
   /* ── FILTER ── */
   function applyFilters() {
-    const q = search.value.toLowerCase().trim();
+    clearGroupHeaders();
+    const q  = search.value.toLowerCase().trim();
     const st = fStatus.value;
     const pr = fPrio.value;
     const kt = fKat.value;
+    const sb = fSub.value;
 
     let visible = 0;
     rows().forEach(tr => {
@@ -363,21 +466,24 @@
       const matchQ  = !q  || text.includes(q);
       const matchSt = !st || tr.dataset.status === st;
       const matchPr = !pr || tr.dataset.prio   === pr;
-      const matchKt = !kt || tr.dataset.kat    === kt;
-      const show = matchQ && matchSt && matchPr && matchKt;
+      const matchKt = !kt || tr.dataset.kategorie === kt;
+      const matchSb = !sb || tr.dataset.unterkategorie === sb;
+      const show = matchQ && matchSt && matchPr && matchKt && matchSb;
       tr.classList.toggle('hidden', !show);
       if (show) visible++;
     });
     noRes.classList.toggle('visible', visible === 0);
+    if (grouped) renderGrouped();
     updateStats();
   }
 
-  /* ── SORT ── */
+  /* ── SORT (nur ausserhalb des Gruppieren-Modus) ── */
   function sortTable(col) {
+    if (grouped) return;
     if (sortCol === col) sortAsc = !sortAsc;
     else { sortCol = col; sortAsc = true; }
 
-    ths.forEach(th => th.classList.remove('asc','desc'));
+    ths.forEach(th => th.classList.remove('asc', 'desc'));
     ths[col].classList.add(sortAsc ? 'asc' : 'desc');
 
     const cells = rows().map(tr => ({
@@ -389,6 +495,64 @@
       : b.val.localeCompare(a.val, 'de')
     );
     cells.forEach(({ tr }) => tbody.appendChild(tr));
+  }
+
+  /* ── GRUPPIEREN: Kategorie › Unterkategorie als Baum ── */
+  function clearGroupHeaders() {
+    tbody.querySelectorAll('tr.group-header').forEach(el => el.remove());
+  }
+
+  function sortForGrouping() {
+    const cells = rows().map(tr => ({
+      tr,
+      kat: (tr.dataset.kategorie || '').toLowerCase(),
+      sub: (tr.dataset.unterkategorie || '').toLowerCase(),
+      titel: tr.cells[1] ? tr.cells[1].textContent.trim().toLowerCase() : ''
+    }));
+    cells.sort((a, b) =>
+      a.kat.localeCompare(b.kat, 'de') ||
+      a.sub.localeCompare(b.sub, 'de') ||
+      a.titel.localeCompare(b.titel, 'de')
+    );
+    cells.forEach(({ tr }) => tbody.appendChild(tr));
+  }
+
+  function insertGroupHeader(beforeTr, text, isSub) {
+    const tr = document.createElement('tr');
+    tr.className = 'group-header' + (isSub ? ' group-header-sub' : '');
+    const td = document.createElement('td');
+    td.colSpan = 8;
+    td.textContent = isSub ? ('› ' + text) : text;
+    tr.appendChild(td);
+    tbody.insertBefore(tr, beforeTr);
+  }
+
+  function renderGrouped() {
+    let lastKat = null, lastSub = null;
+    rows().filter(r => !r.classList.contains('hidden')).forEach(tr => {
+      const kat = tr.dataset.kategorie || '(ohne Kategorie)';
+      const sub = tr.dataset.unterkategorie || '';
+      if (kat !== lastKat) {
+        insertGroupHeader(tr, kat, false);
+        lastKat = kat; lastSub = null;
+      }
+      if (sub !== lastSub) {
+        if (sub) insertGroupHeader(tr, sub, true);
+        lastSub = sub;
+      }
+    });
+  }
+
+  function toggleGroup() {
+    grouped = !grouped;
+    btnGroup.classList.toggle('active', grouped);
+    table.classList.toggle('grouped', grouped);
+    if (grouped) {
+      sortForGrouping();
+      ths.forEach(th => th.classList.remove('asc', 'desc'));
+      sortCol = -1;
+    }
+    applyFilters();
   }
 
   /* ── STATS ── */
@@ -406,20 +570,24 @@
   search.addEventListener('input', applyFilters);
   fStatus.addEventListener('change', applyFilters);
   fPrio.addEventListener('change', applyFilters);
-  fKat.addEventListener('change', applyFilters);
+  fKat.addEventListener('change', () => { populateSubOptions(); applyFilters(); });
+  fSub.addEventListener('change', applyFilters);
+  btnGroup.addEventListener('click', toggleGroup);
   ths.forEach(th => th.addEventListener('click', () => sortTable(+th.dataset.col)));
   document.getElementById('btnReset').addEventListener('click', () => {
     search.value = '';
-    fStatus.value = fPrio.value = fKat.value = '';
-    ths.forEach(th => th.classList.remove('asc','desc'));
+    fStatus.value = fPrio.value = fKat.value = fSub.value = '';
+    populateSubOptions();
+    if (grouped) toggleGroup(); else applyFilters();
+    ths.forEach(th => th.classList.remove('asc', 'desc'));
     sortCol = -1;
-    applyFilters();
   });
 
   /* ── INIT ── */
-  updateStats();
+  populateKatOptions();
+  populateSubOptions();
+  applyFilters();
 })();
 </script>
 </body>
 </html>
-
