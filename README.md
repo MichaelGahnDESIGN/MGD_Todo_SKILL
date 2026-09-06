@@ -3,10 +3,14 @@
 Ein universeller Skill für KI-Agenten (Claude Code & ChatGPT Codex), der Projekt-Todos in einer **selbst-gehosteten, sortierbaren und durchsuchbaren `TODO.html`** verwaltet — mit frei anlegbaren Kategorien und Unterkategorien, ohne externe Services, ohne Datenbank, vollständig im eigenen Repo.
 
 > [!NOTE]
-> **👤 FÜR ENTWICKLER** — Version 1.0.0 ändert das Format: IDs heißen jetzt `TNNN`
-> statt `T-NNN`, und Kategorien sind Freitext statt eines festen Enums. Eine
-> bestehende `TODO.html` im alten Format läuft weiter, sollte aber per
-> `/todo-migrate` aufs neue Format gebracht werden — siehe [CHANGELOG.md](CHANGELOG.md).
+> **👤 FÜR ENTWICKLER** — Aktuell ist **1.1.1**. Seit 1.1.0 trägt jedes Todo
+> Zeitstempel, erledigte lassen sich ausblenden und nach einer Aufbewahrungsfrist
+> aufräumen. Seit 1.0.0 heißen IDs `TNNN` statt `T-NNN` und Kategorien sind
+> Freitext statt eines festen Enums.
+>
+> Eine bestehende `TODO.html` läuft unverändert weiter. Für die neuen
+> Möglichkeiten einmalig `/todo-migrate` aufrufen — der Befehl erkennt selbst,
+> auf welchem Stand die Datei ist. Siehe [CHANGELOG.md](CHANGELOG.md).
 
 ## Das Problem
 
@@ -133,22 +137,67 @@ praktisch, um sich einen Überblick über ein wachsendes Projekt zu verschaffen.
 | T004 | Freunde-System (Backend + UI) | Hoch | Features › Sozial | Offen |
 ```
 
+## Erledigte Todos: ausblenden und aufräumen
+
+Erledigte Todos sammeln sich an. Drei Möglichkeiten, je nachdem was du willst:
+
+| Ziel | Mittel | Ändert die Datei? |
+| --- | --- | --- |
+| Nur gerade nicht sehen | Knopf „✓ Erledigte ausblenden" | nein |
+| Alte erledigte loswerden, im Browser | Knopf „🧹 Aufräumen" | ja, per Download |
+| Alte erledigte loswerden, per Agent | `/todo-cleanup` | ja, direkt |
+
+> [!IMPORTANT]
+> Eine im Browser geöffnete HTML kann sich **nicht selbst überschreiben**. Der
+> Aufräum-Knopf entfernt die Zeilen deshalb in der Ansicht und lädt anschließend
+> eine bereinigte `TODO.html` herunter — die muss die bestehende Datei ersetzen,
+> sonst sind die Zeilen beim nächsten Öffnen wieder da. Wer das umgehen will,
+> nimmt `/todo-cleanup`: der bereinigt die Datei direkt und legt eine Sicherung
+> daneben.
+
+Beide Wege erfassen **nur** Zeilen mit gesetztem `data-erledigt`. Aus einer
+migrierten Altdatei fehlt dieses Datum — solche Zeilen bleiben stehen. Das ist
+Absicht: lieber eine alte Zeile zu viel behalten als eine fälschlich entfernen.
+
+Offene Todos werden nie automatisch entfernt.
+
 ## Bestehende TODO.html migrieren
 
-Läuft bereits eine `TODO.html` im Altformat (IDs `T-NNN`, feste Kategorien
-`app|editor|backend|infra|ux|playtest|doku`)? Sie funktioniert unverändert
-weiter — für die neuen Möglichkeiten (freie Kategorien, Unterkategorien,
-Gruppieren-Ansicht, `TNNN`-IDs) einmalig `/todo-migrate` aufrufen. Der
-Befehl sichert die alte Datei automatisch vorher und ist wiederholbar
-gefahrlos, siehe [SKILL.md](SKILL.md#todo-migrate--bestehende-todohtml-aufs-aktuelle-format-bringen-einmalig-pro-projekt).
+`/todo-migrate` bringt eine vorhandene Datei auf den aktuellen Stand und
+erkennt dabei selbst, wo sie steht:
 
-Kurzfassung für andere Threads/Projekte, die den Skill aktualisieren sollen:
+| Stand | Erkennungsmerkmal | Was passiert |
+| --- | --- | --- |
+| **Altformat** (vor 1.0) | IDs `T-NNN` oder `data-kat` | vollständige Migration |
+| **1.0er Stand** | `TNNN` + `data-kategorie`, aber kein `data-erstellt` | Kopf, Fuß und Skript erneuern, Zeitstempel nachtragen |
+| **Aktuell** | `data-erstellt` und `id="btnCleanup"` vorhanden | nichts, nur Stand melden |
+
+Der Befehl sichert die alte Datei vorher und ist wiederholbar gefahrlos, siehe
+[SKILL.md](SKILL.md#todo-migrate--bestehende-todohtml-aufs-aktuelle-format-bringen-einmalig-pro-projekt).
+
+Kurzfassung für andere Threads oder Projekte, die den Skill aktualisieren sollen
+— in die dortige Session kopieren:
 
 ```
 Aktualisiere den /todo-Skill auf die neueste Version von
-https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL (falls als Git-Klon
-vorhanden: git pull; sonst SKILL.md/TODO.template.html neu laden) und
-führe danach /todo-migrate auf der TODO.html dieses Projekts aus.
+https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL:
+
+1. Liegt unter ~/.claude/skills/todo/ ein .git-Verzeichnis, mach dort
+   git fetch && git pull. Sonst lade SKILL.md und todo/TODO.template.html
+   neu von raw.githubusercontent.com in dieselben Pfade. Gibt es lokale
+   Aenderungen, halt an und zeig sie mir.
+2. Sind .claude/commands/todo.md und .codex/commands/todo.md vorhanden,
+   sind das Kopien der SKILL.md — per diff pruefen und ggf. neu kopieren.
+3. Liegen unter ~/.claude/commands/todo*.md alte Wrapper-Dateien? Die
+   lehren teils noch das Altformat (T-NNN, data-kat). Zeig sie mir und
+   frag, bevor du sie loeschst.
+4. Ruf /todo-migrate auf der TODO.html dieses Projekts auf. Gibt es keine,
+   frag mich, statt ungefragt eine anzulegen.
+5. Pruef mit /todo-debug und im Browser, ob die Knoepfe "Erledigte
+   ausblenden" und "Aufraeumen" da sind und reagieren.
+
+Berichte, was du tatsaechlich geaendert hast, und nenn Fehlschlaege
+ausdruecklich.
 ```
 
 ## Grenzen
@@ -202,7 +251,8 @@ Dieser Skill ist darauf ausgelegt, mit anderen KI-Skills zusammenzuarbeiten:
 ## Änderungen
 
 Siehe [CHANGELOG.md](CHANGELOG.md) für die Versionsgeschichte, insbesondere
-den Breaking-Change-Hinweis zu Version 1.0.0.
+den Breaking-Change-Hinweis zu Version 1.0.0. Fertige Releases mit Notizen
+liegen unter [Releases](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL/releases).
 
 ## Lizenz
 
