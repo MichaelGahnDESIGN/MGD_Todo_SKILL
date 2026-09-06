@@ -4,6 +4,18 @@ Versionsnummern folgen [Semantic Versioning](https://semver.org/lang/de/):
 MAJOR bei Breaking Changes am HTML-/ID-Format, MINOR bei neuen Fähigkeiten
 ohne Breaking Change, PATCH bei Fehlerbehebungen.
 
+## 1.1.1 — 2026-09-01
+
+### Behoben
+
+- **`/todo-migrate` übersprang Dateien auf 1.0er Stand.** Die Idempotenz-Prüfung
+  fragte nur „schon `TNNN`-IDs und `data-kategorie`?" und meldete dann „bereits
+  migriert". Eine Datei aus 1.0.x sieht strukturell korrekt aus, hat aber weder
+  Zeitstempel noch die Knöpfe zum Ausblenden und Aufräumen aus 1.1.0 — sie wäre
+  für immer auf dem alten Funktionsstand geblieben. `/todo-migrate` bestimmt
+  jetzt drei Stände (Altformat / 1.0er Stand / aktuell) und erneuert beim 1.0er
+  Stand Kopf, Fuß und Skript und trägt `data-erstellt` nach.
+
 ## 1.1.0 — 2026-09-01
 
 ### Neu

@@ -208,11 +208,22 @@ Prüft die TODO.html auf:
 
 ### `/todo-migrate` — Bestehende TODO.html aufs aktuelle Format bringen (einmalig pro Projekt)
 
-Wandelt eine `TODO.html` im Altformat (IDs `T-NNN`, fester `data-kat`-Enum,
-altes Kopf-/Filter-HTML) in das aktuelle Format um (IDs `TNNN`, freie
-`data-kategorie`/`data-unterkategorie`, neues Kopf-/Filter-HTML mit
-Gruppieren-Funktion). **Idempotent** — erkennt eine bereits migrierte Datei
-und meldet das, statt ein zweites Mal zu migrieren.
+Bringt eine bestehende `TODO.html` auf den aktuellen Stand — unabhängig davon,
+wie alt sie ist.
+
+**Zuerst den Stand der Datei bestimmen**, denn „schon migriert" ist keine
+Ja/Nein-Frage. Prüfe der Reihe nach:
+
+| Stand | Erkennungsmerkmal | Was zu tun ist |
+| --- | --- | --- |
+| **Altformat** (vor 1.0) | IDs `T-NNN` oder Attribut `data-kat` vorhanden | Schritte 1–9, vollständige Migration |
+| **1.0er Stand** | IDs `TNNN` und `data-kategorie` vorhanden, aber **kein** `data-erstellt` oder **kein** `id="btnCleanup"` | Schritte 1, 2, 5, 8, 9 — Kopf/Fuß/Skript erneuern und Zeitstempel nachtragen. IDs und Kategorien sind bereits richtig. |
+| **Aktuell** | `data-erstellt` **und** `id="btnCleanup"` vorhanden | Nichts ändern, Stand melden, fertig |
+
+Diese Unterscheidung ist der Kern des Befehls: eine Datei im 1.0er Stand sieht
+strukturell korrekt aus, hat aber weder Zeitstempel noch die Knöpfe zum
+Ausblenden und Aufräumen. Wer hier pauschal „schon migriert" meldet, lässt sie
+für immer auf dem alten Funktionsstand stehen.
 
 Ablauf:
 1. **Sicherung anlegen:** Kopiere die aktuelle Datei nach
@@ -255,7 +266,7 @@ Ablauf:
 6. **Notizen unverändert lassen:** bestehender Freitext bleibt gültiger
    Klartext. Die `<details>`-Kurz-/Lang-Form ist optional und wird nicht
    nachträglich erzwungen.
-7. **Nach der reinen Struktur-Umstellung** dem Nutzer anbieten, thematisch
+7. **Nach der reinen Struktur-Umstellung** (entfällt beim 1.0er Stand) dem Nutzer anbieten, thematisch
    verwandte Todos in neue, sprechendere Kategorien umzuhängen (z. B. alle
    `backend`-Zeilen, die inhaltlich um Sicherheit oder Datenschutz kreisen,
    in eine eigene Kategorie „Sicherheit"/„Datenschutz" verschieben) — das
