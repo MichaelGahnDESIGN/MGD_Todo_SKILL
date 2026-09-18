@@ -3,10 +3,12 @@
 Ein universeller Skill für KI-Agenten (Claude Code & ChatGPT Codex), der Projekt-Todos in einer **selbst-gehosteten, sortierbaren und durchsuchbaren `TODO.html`** verwaltet — mit frei anlegbaren Kategorien und Unterkategorien, ohne externe Services, ohne Datenbank, vollständig im eigenen Repo.
 
 > [!NOTE]
-> **👤 FÜR ENTWICKLER** — Aktuell ist **1.1.1**. Seit 1.1.0 trägt jedes Todo
-> Zeitstempel, erledigte lassen sich ausblenden und nach einer Aufbewahrungsfrist
-> aufräumen. Seit 1.0.0 heißen IDs `TNNN` statt `T-NNN` und Kategorien sind
-> Freitext statt eines festen Enums.
+> **👤 FÜR ENTWICKLER** — Aktuell ist **1.2.0**. Seit 1.2.0 gibt es `/info`,
+> einen kompakten Projekt-Status-Schnappschuss (Git-Zustand, Todo-Statistik,
+> optionaler Live-Check). Seit 1.1.0 trägt jedes Todo Zeitstempel, erledigte
+> lassen sich ausblenden und nach einer Aufbewahrungsfrist aufräumen. Seit
+> 1.0.0 heißen IDs `TNNN` statt `T-NNN` und Kategorien sind Freitext statt
+> eines festen Enums.
 >
 > Eine bestehende `TODO.html` läuft unverändert weiter. Für die neuen
 > Möglichkeiten einmalig `/todo-migrate` aufrufen — der Befehl erkennt selbst,
@@ -81,6 +83,7 @@ codex --instructions .codex/commands/todo.md "/todo"
 | `/todo-migrate` | Bringt eine bestehende TODO.html vom Alt- aufs aktuelle Format |
 | `/todo-cleanup` | Entfernt erledigte Todos, deren Erledigung länger zurückliegt (Standard: ein Monat) |
 | `/todo-export` | Markdown-Export aller offenen Todos |
+| `/info` | Kompakter Projekt-Status-Schnappschuss: Git-Zustand, Todo-Statistik, optionaler Live-Check |
 
 > [!TIP]
 > **🤖 FÜR KI-AGENTEN** — `/todo-sync` kennt genau drei Quellen und schlägt neue Einträge zur Bestätigung vor, statt sie automatisch anzulegen: `PlayTest/Test-Todo.md` (offene Checkboxen `- [ ]`), `AI/CODEX-TASKS/*.md` (Aufgaben-Titel aus H2/H3-Überschriften) und `PROJEKT/TODO/*.md` (weitere Todo-Dateien).

@@ -335,6 +335,63 @@ Kategorie und Unterkategorie als ein Breadcrumb-Feld, analog zur HTML-Ansicht:
 
 ---
 
+### `/info` — Projekt-Status-Schnappschuss
+
+Beantwortet die Frage „wie ist der Stand?" in wenigen Zeilen, ohne dass der
+Nutzer selbst `git status`, `git log` und die Todo-Zahlen zusammensuchen muss.
+Ergänzt `/todo` (das sich nur auf die Aufgabenliste konzentriert) um den
+Gesamtblick auf Repo und optional die Live-Version.
+
+Aufruf: `/info` oder `/info <url>` (siehe Live-Check unten).
+
+Ablauf:
+
+1. **Git-Zustand**
+   - Aktueller Branch: `git rev-parse --abbrev-ref HEAD`
+   - Arbeitskopie: `git status --short`. Ist die Ausgabe leer → „sauber".
+     Sonst zusammenfassen statt die volle Liste zu zeigen (z. B.
+     „4 geändert, 1 neu" statt jede Datei einzeln) — bei bis zu 5 betroffenen
+     Dateien dürfen die Namen mit aufgeführt werden, darüber nur die Zahl.
+   - Letzter Commit: `git log -1 --format='%h %s (%cr)'` (Kurzhash, Betreff,
+     relative Zeit).
+   - Abgleich mit dem Remote-Tracking-Branch:
+     `git rev-list --left-right --count HEAD...@{u}` liefert zwei Zahlen
+     (voraus / dahinter). Beide `0` → „im Sync mit `<remote>/<branch>`".
+     Sonst „N Commits voraus" / „N Commits dahinter" / beides zusammen.
+     **Defensiv:** Schlägt der Befehl fehl (kein Tracking-Branch, kein
+     Remote, kein Netzwerk) — Fehler abfangen und diesen Teilsatz einfach
+     weglassen, nicht den ganzen Befehl abbrechen.
+2. **Todo-Zustand:** dieselbe Statistik wie am Ende von `/todo-debug`
+   (Offen / In Arbeit / Erledigt / Gesamt, Anzahl Kategorien) — die dortige
+   Logik wiederverwenden, nicht neu erfinden. Existiert keine TODO.html
+   (noch kein `/todo-setup` gelaufen), diesen Abschnitt weglassen statt
+   einen Fehler zu werfen.
+3. **Optionaler Live-Check:** nur ausführen, wenn eine Live-URL eindeutig
+   erkennbar ist:
+   - als Argument mitgegeben (`/info https://example.com`), oder
+   - aus einer offensichtlichen Projektquelle ableitbar (z. B. ein
+     `homepage`-Feld in `package.json`, eine `.env`/Config-Datei mit
+     erkennbarem `URL`/`DEPLOY_URL`-Schlüssel).
+   Dann ein einfacher Statuscode-Check: `curl -o /dev/null -s -w '%{http_code}' <url>`.
+   **Nicht raten:** Gibt es keine offensichtliche Live-URL, diesen Abschnitt
+   ersatzlos weglassen — kein Fehler, keine Nachfrage, kein Versuch, eine URL
+   zu erraten.
+4. **Ausgabeformat:** kompakt, wenige Zeilen, zum Überfliegen gedacht (kein
+   langer Report). Beispiel:
+   ```
+   📍 Branch: main (im Sync mit origin/main)
+   📝 Git: sauber (keine offenen Änderungen)
+   🕒 Letzter Commit: a1b2c3d "release(v0.18.2): ..." (vor 2 Std.)
+   ✅ Todos: 12 Offen · 3 In Arbeit · 71 Erledigt (86 gesamt, 9 Kategorien)
+   ```
+   Mit Live-Check zusätzlich z. B. `🌐 Live: https://example.com → 200 OK`.
+
+Hinweis für Codex: alle drei Datenquellen (`git`, TODO.html, `curl`) sind
+reine Shell-Aufrufe — keine Claude-spezifische API nötig. Läuft identisch
+über `codex --instructions <pfad-zu-SKILL.md> "/info"`.
+
+---
+
 ## HTML-Format der TODO.html
 
 Die TODO.html enthält alle Todos als `<tr>`-Zeilen in `<tbody id="todoBody">`.

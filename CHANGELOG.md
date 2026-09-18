@@ -4,6 +4,18 @@ Versionsnummern folgen [Semantic Versioning](https://semver.org/lang/de/):
 MAJOR bei Breaking Changes am HTML-/ID-Format, MINOR bei neuen Fähigkeiten
 ohne Breaking Change, PATCH bei Fehlerbehebungen.
 
+## 1.2.0 — 2026-09-19
+
+### Neu
+
+- **`/info` — Projekt-Status-Schnappschuss.** Beantwortet „wie ist der Stand?"
+  in wenigen Zeilen: Git-Zustand (Branch, saubere/offene Arbeitskopie, letzter
+  Commit, Abgleich mit dem Remote-Tracking-Branch), dieselbe Todo-Statistik
+  wie am Ende von `/todo-debug`, und optional ein einfacher Statuscode-Check
+  gegen eine erkennbare Live-URL. Ergänzt `/todo` (Fokus auf die Aufgaben-
+  liste) um den Gesamtblick auf das Repo, ohne `git status`/`git log` von
+  Hand zusammensuchen zu müssen.
+
 ## 1.1.1 — 2026-09-01
 
 ### Behoben
