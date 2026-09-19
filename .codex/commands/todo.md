@@ -335,6 +335,147 @@ Kategorie und Unterkategorie als ein Breadcrumb-Feld, analog zur HTML-Ansicht:
 
 ---
 
+
+### `/todo-link <id> <pfad-oder-url> [label]` — Todo mit Dokumentation verknüpfen
+
+Verknüpft ein Todo mit einer oder mehreren relevanten Projektquellen, ohne den
+Titel oder die eigentliche Aufgabe aufzublähen.
+
+Geeignete Ziele sind insbesondere:
+
+- `README.md`, `PRODUCT.md`, `CLAUDE.md`, `AGENTS.md`
+- Dateien unter `WIKI/`, `DOCS/`, `docs/`
+- Architektur-, Entscheidungs-, Rechts-, Test- und Übergabedokumente
+- GitHub-Issues oder andere vertrauenswürdige HTTPS-Quellen
+
+Ablauf:
+
+1. Todo per ID finden.
+2. Ziel prüfen. Bei relativen Pfaden muss die Datei im Projekt existieren oder
+   eindeutig als geplantes Dokument markiert sein.
+3. Niemals `javascript:`, `data:`, eingebettete Secrets oder Zugangsdaten
+   als Link übernehmen.
+4. In der Notizen-Spalte einen Block
+   `<div class="todo-links">...</div>` anlegen oder erweitern.
+5. Relativen Link aus Sicht der `TODO.html` berechnen. Liegt die TODO-Datei
+   standardmäßig unter `TODO/TODO.html`, zeigt ein Wiki-Link typischerweise
+   auf `../WIKI/...`.
+6. Optional das Attribut `data-links` am `<tr>` mit den normalisierten
+   Projektpfaden ergänzen. Mehrere Werte werden mit `;` getrennt.
+7. Vorhandene identische Links nicht duplizieren.
+
+Beispiel:
+
+~~~html
+<div class="todo-links">
+  <a href="../WIKI/02-ARCHITEKTUR/ZIELARCHITEKTUR.md">Architektur</a>
+  <a href="../WIKI/05-RECHT/RECHT-COMPLIANCE.md">Recht</a>
+</div>
+~~~
+
+Die sichtbaren Links sind maßgeblich; `data-links` dient nur Agenten und
+späteren Werkzeugen als maschinenlesbarer Zusatzindex.
+
+### `/todo-index` — Projekt-Dokumentationsindex pflegen
+
+Aktualisiert den Dokumentationsindex oben in der `TODO.html`. Der Index ist
+kein Ersatz für README oder Wiki, sondern der schnelle Einstieg von der
+operativen Aufgabenliste in die Projektquellen.
+
+Suche in dieser Reihenfolge:
+
+1. `README.md`, `PRODUCT.md`, `CLAUDE.md`, `AGENTS.md`
+2. `WIKI/README.md`
+3. Markdown-/HTML-Einstiegsseiten unter `WIKI/`, `DOCS/`, `docs/`
+4. optional Architektur-, Roadmap-, Entscheidungs- und Rechtsdokumente, die in
+   offenen Todos verlinkt sind
+
+Regeln:
+
+- höchstens die wichtigsten etwa 30 Links im sichtbaren Index
+- sprechende Labels statt Dateinamenwüste
+- relative Links aus Sicht der `TODO.html`
+- tote Links entfernen
+- keine Secrets, Backups, `.env`, Zugangsdaten oder Binärdateien indexieren
+- vorhandene manuelle Links respektieren, wenn sie noch gültig sind
+
+Das Template enthält dafür
+`<section class="project-index" id="projectIndex" ...>`. Ist der Index leer,
+bleibt die Section ausgeblendet. Sobald Links eingetragen sind, `hidden`
+entfernen.
+
+### `/todo-doc-init` — leichtgewichtiges Projekt-Wiki anlegen
+
+Optionaler Befehl für komplexe Projekte. Er wird nicht automatisch bei jedem
+Todo-Projekt ausgeführt.
+
+Wenn noch keine vergleichbare Dokumentationsstruktur existiert, lege an:
+
+~~~
+WIKI/
+  README.md
+  00-PROJEKT/
+  01-ENTSCHEIDUNGEN/
+  02-ARCHITEKTUR/
+  03-PRODUKT/
+  04-ROADMAP/
+  05-RECHT/
+  08-ARCHIV/
+  09-OFFENE-FRAGEN/
+~~~
+
+Die Kategorien sind Vorschläge und dürfen dem Projekt angepasst werden.
+
+Zusätzlich:
+
+- vorhandene `DOCS/` oder `docs/` nicht blind duplizieren
+- `WIKI/README.md` als zentralen Index schreiben
+- `/todo-index` ausführen
+- bestehende Todos auf relevante Seiten verlinken
+- niemals sensible Dateien in das Wiki kopieren
+
+### `/todo-archive <titel>` — datierte Planungs-/Entscheidungsnotiz
+
+Erstellt für einen wichtigen Gesprächs-, Planungs- oder Übergabestand eine
+datierte Markdown-Datei, bevorzugt unter:
+
+`WIKI/08-ARCHIV/YYYY-MM-DD-<slug>.md`
+
+Ist kein WIKI vorhanden, kann ein vorhandener `DOCS/ARCHIV/`-Ordner genutzt
+werden. Nicht ungefragt eine zweite Dokumentationswelt anlegen.
+
+Archivdateien enthalten:
+
+- Datum
+- Quelle/Kontext
+- zusammengefasste Entscheidungen
+- offene Punkte
+- Verweise auf relevante Todos/Dokumente
+
+Wichtig: Ein Archiv ist Historie. Dauerhafte Entscheidungen müssen zusätzlich
+in die aktuelle Fach-Dokumentation übernommen werden. So verhindert der Skill,
+dass ein Projekt zwar alles archiviert, Agenten aber später veraltete
+Gesprächsstände als aktuelle Wahrheit lesen.
+
+### Dokumentations-Links im Todo-Format
+
+Links sind optional und abwärtskompatibel. Ältere TODO-Dateien bleiben gültig.
+
+Empfohlene Darstellung in der Notizen-Spalte:
+
+~~~html
+<details>
+  <summary>Kurzbeschreibung</summary>
+  Ausführlicher Kontext.
+  <div class="todo-links">
+    <a href="../WIKI/03-PRODUKT/UPLOAD.md">Spezifikation</a>
+  </div>
+</details>
+~~~
+
+Der Linktext ist Teil der Volltextsuche. Dadurch kann man in der TODO.html auch
+nach „Recht“, „Architektur“ oder einem Dokumentnamen suchen.
+
 ### `/info` — Projekt-Status-Schnappschuss
 
 Beantwortet die Frage „wie ist der Stand?" in wenigen Zeilen, ohne dass der
