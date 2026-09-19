@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.3.0 — 2026-09-20
+
+### Neu
+
+- **Dokumentationsindex in TODO.html.** Das Template besitzt jetzt eine optionale, von `/todo-index` gepflegte Projekt-Linkleiste.
+- **`/todo-link`.** Todos können direkt auf Spezifikationen, Architektur, Rechtsrecherche, Issues oder andere Projektquellen verweisen.
+- **`/todo-index`.** Baut einen kompakten Einstieg zu README, PRODUCT, CLAUDE, AGENTS, WIKI/DOCS und todo-relevanten Dokumenten.
+- **`/todo-doc-init`.** Optionaler Wiki-Start für komplexe Projekte, ohne bestehende DOCS-Strukturen zu duplizieren.
+- **`/todo-archive`.** Datierte Planungs-/Entscheidungsarchive mit der Regel, dauerhafte Entscheidungen zusätzlich in die aktuelle Fach-Doku zu übernehmen.
+- **Link-Styles im HTML-Template.** Projektlinks und Todo-Links sind direkt klickbar und bleiben über die Volltextsuche auffindbar.
+
 Versionsnummern folgen [Semantic Versioning](https://semver.org/lang/de/):
 MAJOR bei Breaking Changes am HTML-/ID-Format, MINOR bei neuen Fähigkeiten
 ohne Breaking Change, PATCH bei Fehlerbehebungen.
