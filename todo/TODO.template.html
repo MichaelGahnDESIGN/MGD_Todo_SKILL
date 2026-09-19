@@ -158,6 +158,46 @@
   }
   .btn-cleanup:hover { background: rgba(231,76,107,.12); }
 
+  /* ── PROJECT INDEX / DOC LINKS ── */
+  .project-index {
+    margin-bottom: 16px;
+    padding: 14px 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  .project-index[hidden] { display: none; }
+  .project-index h2 {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+  }
+  .project-links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .project-links a, .todo-links a {
+    display: inline-block;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--cyan);
+    text-decoration: none;
+    background: rgba(78,205,196,.06);
+  }
+  .project-links a:hover, .todo-links a:hover {
+    border-color: var(--cyan);
+  }
+  .todo-links {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 7px;
+  }
+
   /* ── MAIN ── */
   main { padding: 20px 24px; }
   .no-results {
@@ -356,6 +396,16 @@
 </header>
 
 <main>
+  <!-- Wird von /todo-index gepflegt. hidden entfernen, sobald Links vorhanden sind. -->
+  <section class="project-index" id="projectIndex" data-managed="todo-index" hidden>
+    <h2>Projekt-Dokumentation</h2>
+    <div class="project-links">
+      <!-- Beispiel nach /todo-index:
+      <a href="../README.md">README</a>
+      <a href="../WIKI/README.md">Projekt-Wiki</a>
+      -->
+    </div>
+  </section>
   <div class="table-wrap">
     <table id="todoTable">
       <thead>
