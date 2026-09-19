@@ -270,3 +270,16 @@ MIT — frei verwendbar, anpassbar, weitergeben mit Namensnennung. Siehe [LICENS
 ## Impressum
 
 Angaben gemäß § 5 DDG — Siehe [`IMPRESSUM.md`](IMPRESSUM.md).
+
+## Dokumentations- und Link-System
+
+Seit Version 1.3.0 kann der Skill Todos direkt mit Projektdokumentation verknüpfen und die TODO.html als operativen Einstieg in komplexe Projekt-Wikis verwenden.
+
+Neue Befehle:
+
+- `/todo-link <id> <pfad-oder-url> [label]` verknüpft ein Todo mit Spezifikation, Architektur, Rechtsrecherche oder anderen Quellen.
+- `/todo-index` pflegt einen sichtbaren Dokumentationsindex oben in der TODO.html.
+- `/todo-doc-init` legt bei komplexen Projekten optional eine strukturierte WIKI-Basis an.
+- `/todo-archive <titel>` archiviert wichtige Planungs- und Entscheidungsstände datiert, ohne sie mit der aktuellen Spezifikation zu verwechseln.
+
+Das System ist abwärtskompatibel. Bestehende TODO.html-Dateien bleiben gültig. Details stehen in `SKILL.md` und `docs/project-documentation.md`.
