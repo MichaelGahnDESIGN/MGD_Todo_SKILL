@@ -113,6 +113,20 @@ migrierten Altdatei fehlt dieses Datum, solche Zeilen bleiben also stehen.
 Wer erledigte Todos nur vorübergehend loswerden will, nimmt den Knopf
 „✓ Erledigte ausblenden" — der ändert nichts an der Datei.
 
+## Ein Todo bearbeiten
+
+Zwei Wege, alle Felder eines Todos (Titel, Priorität, Kategorie/
+Unterkategorie, Status, Notizen, Links) zu ändern — nicht nur Status und
+Notizen wie bei `/todo-update`:
+
+- **✏️-Knopf in der HTML** — öffnet ein Modal direkt in der Zeile, „Speichern"
+  schreibt sofort sichtbar ins DOM. Da eine im Browser geöffnete HTML sich
+  nicht selbst überschreiben kann, folgt danach ein Hinweis-Banner mit
+  „💾 Speichern (Download)" — die heruntergeladene Datei muss die bestehende
+  ersetzen, sonst ist die Änderung beim nächsten Öffnen weg. Derselbe
+  Download-Knopf steht auch dauerhaft in der Kopfzeile.
+- **`/todo-edit <id>`** — macht dasselbe direkt an der Datei, per Agent.
+
 ## HTML im Browser öffnen
 
 Einfach `TODO.html` im Browser öffnen (Doppelklick oder via `open PROJEKT/TODO/TODO.html`).
