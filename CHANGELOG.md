@@ -1,5 +1,39 @@
 # Changelog
 
+## Unreleased
+
+### Neu
+
+- **`/todo-edit <id>`.** Bearbeitet alle Felder eines Todos: Titel, Priorität,
+  Kategorie/Unterkategorie, Status (inkl. korrektem Setzen/Entfernen von
+  `data-erledigt` und `row-done` je nach Richtung des Statuswechsels),
+  Notizen und verknüpfte Links (`.todo-links`) — inklusive Entfernen oder
+  Umbenennen bestehender Links, nicht nur Hinzufügen. `/todo-update` bleibt
+  unverändert der kürzere Weg für reine Status-/Notiz-Änderungen.
+- **Bearbeiten-Modal direkt in der TODO.html.** Jede Zeile bekommt einen
+  ✏️-Knopf (neue Spalte „Aktionen", clientseitig ergänzt — funktioniert
+  auch mit älteren, noch nicht migrierten Dateien). Öffnet ein Modal mit
+  allen Feldern; „Speichern" schreibt die Änderung sofort sichtbar ins DOM
+  zurück. Escape-Taste oder Klick außerhalb schließt das Modal ohne
+  Änderung.
+- **Genereller „💾 Speichern (Download)"-Knopf** in der Kopfzeile — bietet
+  den aktuellen Browser-Stand jederzeit als `TODO.html`-Download an, nicht
+  nur nach dem Aufräumen. Nach jeder Bearbeitung erscheint zusätzlich ein
+  Hinweis-Banner mit demselben Download-Knopf, weil eine im Browser
+  geöffnete HTML sich nicht selbst überschreiben kann (gleiches Muster wie
+  beim bestehenden Aufräum-Knopf).
+- **`data-bearbeitet`** — neues, optionales Attribut, das den Zeitpunkt der
+  letzten Bearbeitung festhält (analog zu `data-erledigt`). Rein
+  informativ, kein anderer Befehl wertet es aus; `data-erstellt` bleibt
+  davon unberührt.
+- **Begleit-Skill-Check in `/todo-setup`.** Am Ende des Setup-Dialogs prüft
+  der Agent jetzt einmalig, ob die drei anderen Kern-Begleit-Skills
+  (MGD_DEV_SKILL, Fragenkatalog-Skill, MGD_Living-Documentation) im Projekt
+  oder global installiert sind, und fragt bei fehlenden aktiv nach, ob sie
+  per `git clone` mitinstalliert werden sollen. Ergänzend im README ein neuer
+  Abschnitt „Die 4 Kern-Begleit-Skills" mit den konkreten Zusammenspiel-Sätzen
+  je Skill.
+
 ## 1.3.0 — 2026-09-20
 
 ### Neu

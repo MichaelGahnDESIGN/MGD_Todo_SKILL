@@ -3,12 +3,17 @@
 Ein universeller Skill für KI-Agenten (Claude Code & ChatGPT Codex), der Projekt-Todos in einer **selbst-gehosteten, sortierbaren und durchsuchbaren `TODO.html`** verwaltet — mit frei anlegbaren Kategorien und Unterkategorien, ohne externe Services, ohne Datenbank, vollständig im eigenen Repo.
 
 > [!NOTE]
-> **👤 FÜR ENTWICKLER** — Aktuell ist **1.2.0**. Seit 1.2.0 gibt es `/info`,
-> einen kompakten Projekt-Status-Schnappschuss (Git-Zustand, Todo-Statistik,
-> optionaler Live-Check). Seit 1.1.0 trägt jedes Todo Zeitstempel, erledigte
-> lassen sich ausblenden und nach einer Aufbewahrungsfrist aufräumen. Seit
-> 1.0.0 heißen IDs `TNNN` statt `T-NNN` und Kategorien sind Freitext statt
-> eines festen Enums.
+> **👤 FÜR ENTWICKLER** — Aktuell ist **1.2.0**. Neu: `/todo-edit <id>`
+> bearbeitet alle Felder eines Todos (Titel, Priorität, Kategorie/
+> Unterkategorie, Status, Notizen, Links) — `/todo-update` deckte davon nur
+> Status/Kategorie/Notizen ab. Dazu bekommt die TODO.html selbst einen
+> ✏️-Bearbeiten-Knopf pro Zeile mit In-Browser-Modal, siehe „Todos direkt im
+> Browser bearbeiten" unten. Seit 1.2.0 gibt es `/info`, einen kompakten
+> Projekt-Status-Schnappschuss (Git-Zustand, Todo-Statistik, optionaler
+> Live-Check). Seit 1.1.0 trägt jedes Todo Zeitstempel, erledigte lassen sich
+> ausblenden und nach einer Aufbewahrungsfrist aufräumen. Seit 1.0.0 heißen
+> IDs `TNNN` statt `T-NNN` und Kategorien sind Freitext statt eines festen
+> Enums.
 >
 > Eine bestehende `TODO.html` läuft unverändert weiter. Für die neuen
 > Möglichkeiten einmalig `/todo-migrate` aufrufen — der Befehl erkennt selbst,
@@ -77,6 +82,7 @@ codex --instructions .codex/commands/todo.md "/todo"
 | `/todo-add <titel>` | Fügt ein neues Todo in die HTML ein |
 | `/todo-close <id>` | Markiert ein Todo als erledigt |
 | `/todo-update` | Interaktives Aktualisieren von Status und Notizen |
+| `/todo-edit <id>` | Interaktives Bearbeiten aller Felder: Titel, Priorität, Kategorie/Unterkategorie, Status, Notizen, Links |
 | `/todo-pfad <pfad>` | Setzt den Pfad zur TODO.html (gespeichert in `.todo-config`) |
 | `/todo-sync` | Importiert neue Todos aus Projekt-Quellen (PlayTest, CODEX-TASKS, …) |
 | `/todo-debug` | Validiert die HTML-Struktur, findet kaputte Einträge |
@@ -164,6 +170,32 @@ Absicht: lieber eine alte Zeile zu viel behalten als eine fälschlich entfernen.
 
 Offene Todos werden nie automatisch entfernt.
 
+## Todos direkt im Browser bearbeiten
+
+Jede Zeile in der TODO.html hat einen ✏️-Knopf (Spalte „Aktionen"). Klick
+öffnet ein Modal mit allen Feldern — Titel, Priorität, Kategorie,
+Unterkategorie, Status, Notiz (kurz/lang) und verknüpfte Links (siehe
+`/todo-link`). „Speichern" schreibt die Änderung sofort sichtbar ins DOM
+zurück, inklusive Badge-Wechsel bei Priorität/Status.
+
+| Ziel | Mittel | Ändert die Datei? |
+| --- | --- | --- |
+| Ein Todo im Browser bearbeiten | ✏️-Knopf pro Zeile → Modal → „Speichern" | nur im DOM, nicht auf der Festplatte |
+| Die Browser-Änderung dauerhaft machen | Knopf „💾 Speichern (Download)" (Kopfzeile oder Hinweis-Banner) | ja, per Download |
+| Alle Felder per Agent bearbeiten | `/todo-edit <id>` | ja, direkt |
+
+> [!IMPORTANT]
+> Dieselbe Einschränkung wie beim Aufräumen: Eine im Browser geöffnete HTML
+> kann sich **nicht selbst überschreiben**. „Speichern" im Modal aktualisiert
+> nur die laufende Ansicht und zeigt danach einen Hinweis-Banner mit
+> „💾 Speichern (Download)" — die heruntergeladene Datei muss die bestehende
+> `TODO.html` ersetzen, sonst ist die Änderung beim nächsten Öffnen weg. Der
+> Download-Knopf steht zusätzlich dauerhaft in der Kopfzeile, nutzbar nach
+> jeder Browser-Änderung, nicht nur nach dem Bearbeiten-Modal.
+
+Escape-Taste oder Klick außerhalb des Modals schließt es ohne Änderung —
+ein Abbruch verwirft nichts an der Zeile.
+
 ## Bestehende TODO.html migrieren
 
 `/todo-migrate` bringt eine vorhandene Datei auf den aktuellen Stand und
@@ -220,11 +252,33 @@ ausdruecklich.
 | [Integration](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL/wiki/Integration) | Zusammenspiel mit anderen MGD-Skills |
 | [Setup](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL/wiki/Setup) | Installation und Konfiguration im Detail |
 
+## Die 4 Kern-Begleit-Skills
+
+Dieser Skill bildet zusammen mit drei weiteren MGD-Skills ein Set, das in
+Projekten oft gemeinsam sinnvoll ist — jeder funktioniert auch allein, das
+Zusammenspiel ist optional:
+
+| Skill | Repo | Zusammenspiel mit `/todo` |
+|---|---|---|
+| **MGD_DEV_SKILL** | [MichaelGahnDESIGN/MGD_DEV_SKILL](https://github.com/MichaelGahnDESIGN/MGD_DEV_SKILL) | `/todo` vor jedem Release aufrufen — kritische Todos blockieren den Release. |
+| **Fragenkatalog-Skill** | [MichaelGahnDESIGN/Fragenkatalog-Skill](https://github.com/MichaelGahnDESIGN/Fragenkatalog-Skill) | Beantwortete Fragen aus dem Fragenkatalog, die noch Folgearbeit brauchen, per `/todo-add` als Todo übernehmen. |
+| **MGD_Todo_SKILL** (dieses Repo) | [MichaelGahnDESIGN/MGD_Todo_SKILL](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL) | Operative Aufgabenliste — Einstiegspunkt für den Tagesbetrieb. |
+| **MGD_Living-Documentation** | [MichaelGahnDESIGN/MGD_Living-Documentation](https://github.com/MichaelGahnDESIGN/MGD_Living-Documentation) | `/todo-link` verweist direkt auf Entscheidungs-, Risiko- oder Architekturabschnitte der Living-Documentation, statt Kontext im Todo selbst zu duplizieren. |
+
+> [!TIP]
+> **🤖 FÜR KI-AGENTEN** — `/todo-setup` prüft beim allerersten Einrichten
+> eines Projekts aktiv, ob die drei anderen Begleit-Skills bereits installiert
+> sind, und fragt bei fehlenden gezielt nach, ob sie mitinstalliert werden
+> sollen (siehe [SKILL.md](SKILL.md#todo-setup--neues-projekt-einrichten-einmalig)).
+> Das ist eine echte, einmalige Prüf-Logik, kein reiner Textbaustein.
+
 ## Integration mit anderen Skills
 
 Dieser Skill ist darauf ausgelegt, mit anderen KI-Skills zusammenzuarbeiten:
 
 - **[MGD_DEV_SKILL](https://github.com/MichaelGahnDESIGN/MGD_DEV_SKILL)** — vor jedem Deploy `/todo` aufrufen: kritische Todos blockieren den Release
+- **[Fragenkatalog-Skill](https://github.com/MichaelGahnDESIGN/Fragenkatalog-Skill)** — offene, aus Nutzerperspektive beantwortete Fragen per `/todo-add` als Todo übernehmen
+- **[MGD_Living-Documentation](https://github.com/MichaelGahnDESIGN/MGD_Living-Documentation)** — `/todo-link` verweist auf Entscheidungs- oder Risiko-Abschnitte der Living-Documentation
 - **[MGD_AI-PlayTest_SKILL](https://github.com/MichaelGahnDESIGN/MGD_AI-PlayTest_SKILL)** — nach Playtest `/todo-sync` aufrufen: neue Bugfix-Todos automatisch importieren
 - **[MGD_ProjectClean_SKILL](https://github.com/MichaelGahnDESIGN/MGD_ProjectClean_SKILL)** — `/todo-export` für Release-Notes als Anhang
 - **[MGD_AI-Project-Updater_SKILL](https://github.com/MichaelGahnDESIGN/MGD_AI-Project-Updater_SKILL)** — nach Staging-Tests Todos synchronisieren

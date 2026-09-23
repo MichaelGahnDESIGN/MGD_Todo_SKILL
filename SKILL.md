@@ -85,6 +85,23 @@ Baum nach Kategorie › Unterkategorie an, statt als flache sortierbare
 Liste. Rein clientseitig, keine Einstellung — jeder Betrachter der Datei
 schaltet es für sich selbst um.
 
+**Bearbeiten im Browser:** Jede Zeile hat einen ✏️-Knopf (Spalte „Aktionen",
+ganz rechts, wird beim Laden clientseitig ergänzt — auch bei älteren, noch
+nicht migrierten Dateien). Klick öffnet ein Modal mit allen Feldern (Titel,
+Priorität, Kategorie, Unterkategorie, Status, Notiz kurz/lang, verknüpfte
+Links). „Speichern" schreibt die Änderung sofort sichtbar ins DOM zurück —
+inklusive Badge-Wechsel bei Priorität/Status und korrektem Setzen/Entfernen
+von `data-erledigt`/`row-done` je nach Richtung des Statuswechsels. Escape
+oder Klick außerhalb schließt das Modal ohne Änderung. Weil eine im Browser
+geöffnete HTML sich nicht selbst überschreiben kann (siehe „Aufräumen"
+oben), erscheint nach dem Speichern ein Hinweis-Banner mit einem
+„💾 Speichern (Download)"-Knopf, der eine aktualisierte `TODO.html` zum
+Download anbietet — dieselbe Datei muss die bestehende ersetzen, sonst sind
+die Änderungen beim nächsten Öffnen weg. Derselbe Download-Knopf steht auch
+dauerhaft in der Kopfzeile (nicht nur nach einer Bearbeitung), damit sich
+jeder Browser-Stand jederzeit sichern lässt. Für Agenten-Bearbeitung ohne
+Browser: `/todo-edit` (siehe unten) deckt dieselben Felder ab.
+
 ---
 
 ## Befehle
@@ -122,8 +139,95 @@ Ablauf:
       gilt für echte Todos, nicht für die Platzhalter der Vorlage.
    f. Schreibe den Pfad in `.todo-config`
    g. Gib Erfolgsmeldung aus: Pfad, nächster Schritt (`/todo-add "Erstes Todo"`)
+4. **Begleit-Skill-Check (läuft einmalig, ganz am Ende des Setup-Dialogs —
+   egal ob Schritt 2 oder Schritt 3 gegriffen hat):**
+
+   Michael Gahn pflegt vier zusammengehörige Skills, die im selben Projekt oft
+   gemeinsam sinnvoll sind: dieser Todo-Skill, **MGD_DEV_SKILL** (Release/Sync/
+   Backup/Tests), **Fragenkatalog-Skill** (interaktiver Design-Fragenkatalog)
+   und **MGD_Living-Documentation** (lebendige Projektdokumentation). Prüfe,
+   welche der drei anderen im Projekt fehlen, bevor der Setup-Dialog endet:
+
+   a. **Anzeichen prüfen** (Projekt- und Home-Verzeichnis, jeweils erstes
+      Match reicht):
+      - **MGD_DEV_SKILL** — `.claude/commands/dev.md`, `.codex/commands/dev.md`,
+        `~/.claude/skills/dev/`, `~/.codex/skills/dev/`,
+        `~/.claude/skills/MGD-DEV-Skill/dev/`.
+      - **Fragenkatalog-Skill** — `.claude/commands/fragenkatalog.md`,
+        `.codex/commands/fragenkatalog.md`, `~/.claude/skills/fragenkatalog/`,
+        `~/.codex/skills/fragenkatalog/`.
+        <!-- ggf. exakte Zielpfade beim nächsten Sync mit dem Ziel-Repo verifizieren —
+             https://github.com/MichaelGahnDESIGN/Fragenkatalog-Skill enthält
+             bislang nur ein Konzept-README ohne veröffentlichte Ordnerstruktur. -->
+      - **MGD_Living-Documentation** — `.claude/skills/living-documentation/SKILL.md`,
+        `.agents/skills/living-documentation/SKILL.md`,
+        `~/.claude/skills/living-documentation/`,
+        `~/.codex/skills/living-documentation/`.
+      - Bei Unsicherheit über die aktuellen Datei-/Ordnernamen (Repos ändern
+        sich), bei Netzzugriff kurz gegenprüfen, z. B.:
+        ```
+        curl -s https://raw.githubusercontent.com/MichaelGahnDESIGN/MGD_DEV_SKILL/main/README.md
+        curl -s https://raw.githubusercontent.com/MichaelGahnDESIGN/Fragenkatalog-Skill/main/README.md
+        curl -s https://raw.githubusercontent.com/MichaelGahnDESIGN/MGD_Living-Documentation/main/README.md
+        ```
+   b. **Fehlt einer oder mehrere**, aktiv nachfragen (kein reiner Hinweis,
+      echte Frage mit Ja/Nein):
+      > Ich habe festgestellt, dass [Skill X] in diesem Projekt noch nicht
+      > installiert ist. Er ergänzt [kurzer Nutzen, z. B. „vor jedem Release
+      > prüfen, ob kritische Todos offen sind" / „offene Design-Fragen, die
+      > sich direkt als Todo übernehmen lassen" / „eine lebendige
+      > Projektdokumentation, auf die Todos verlinken können"]. Soll ich ihn
+      > jetzt mitinstallieren? (ja/nein)
+   c. **Bei Zustimmung**, je Skill konkret installieren (Repo klonen + gemäß
+      dessen dokumentierter Zielstruktur kopieren, nicht raten):
+      - **MGD_DEV_SKILL** (projektlokal oder global — Nutzer fragen, Default
+        global):
+        ```
+        git clone https://github.com/MichaelGahnDESIGN/MGD_DEV_SKILL.git ~/.claude/skills/MGD-DEV-Skill
+        cp -R ~/.claude/skills/MGD-DEV-Skill/dev ~/.claude/skills/dev
+        mkdir -p ~/.claude/commands
+        cp ~/.claude/skills/MGD-DEV-Skill/.claude/commands/*.md ~/.claude/commands/
+        ```
+        Für Codex analog nach `~/.codex/skills/` bzw. `~/.codex/commands/`
+        (siehe Repo-README, Abschnitt „Installation in ChatGPT Codex").
+      - **Fragenkatalog-Skill** — das Repo enthält aktuell nur ein
+        Konzept-README, keine veröffentlichte Skill-Datei. Klonen, aber vor
+        dem Kopieren die tatsächlich vorhandene Struktur prüfen:
+        ```
+        git clone https://github.com/MichaelGahnDESIGN/Fragenkatalog-Skill.git /tmp/fragenkatalog-skill-check
+        ls /tmp/fragenkatalog-skill-check
+        ```
+        <!-- ggf. exakte Zielpfade beim nächsten Sync mit dem Ziel-Repo verifizieren —
+             sobald das Repo eine SKILL.md/Commands-Struktur veröffentlicht,
+             hier den passenden `cp -R`-Befehl ergänzen. -->
+        Ist keine installierbare Struktur vorhanden, dem Nutzer das ehrlich
+        melden statt eine Struktur zu erfinden.
+      - **MGD_Living-Documentation** (projektlokal, wie im Repo-README
+        empfohlen):
+        ```
+        git clone https://github.com/MichaelGahnDESIGN/MGD_Living-Documentation.git /tmp/mgd-living-documentation-check
+        mkdir -p .claude/skills
+        cp -R /tmp/mgd-living-documentation-check/skills/living-documentation .claude/skills/living-documentation
+        ```
+        Für Codex: `~/.codex/skills/living-documentation/` (global) oder
+        `.agents/skills/living-documentation/` (projektlokal, toolübergreifend).
+   d. **Ohne Netzzugriff**: keine Installation versuchen. Stattdessen die
+      obenstehenden Schritte so konkret wie möglich als Anleitung ausgeben,
+      inklusive des Platzhalter-Kommentars
+      `<!-- ggf. exakte Zielpfade beim nächsten Sync mit den Ziel-Repos verifizieren -->`
+      an den Stellen, wo die Struktur nicht lokal geprüft werden konnte.
+   e. **Nur einmalig**: Dieser Check läuft ausschließlich innerhalb von
+      `/todo-setup` (also beim allerersten Einrichten eines Projekts), nicht
+      bei jedem `/todo`-Aufruf. Ist `/todo-setup` für dieses Projekt bereits
+      einmal durchgelaufen (TODO.html bzw. `.todo-config` existiert schon,
+      siehe Schritt 2 oben), entfällt dieser Schritt beim erneuten Aufruf
+      komplett — er ist kein wiederkehrender Bestandteil von `/todo` oder
+      anderen Befehlen.
 
 Hinweis für Codex: Template via `curl` laden, Ordner via `mkdir -p` anlegen.
+Der Begleit-Skill-Check aus Schritt 4 läuft identisch über
+`codex --instructions <pfad-zu-SKILL.md> "/todo-setup"` — `git clone` und
+`cp` sind reine Shell-Aufrufe, keine Claude-spezifische API nötig.
 
 ---
 
@@ -150,6 +254,99 @@ Interaktiver Modus:
    `<details>`-Langbeschreibung umwandeln, wenn es umfangreicher wird)
 6. Schreibe Änderungen in TODO.html (HTML-Attribute aktualisieren, Badge-Klasse
    tauschen, `row-done` ergänzen)
+
+> [!TIP]
+> **🤖 FÜR KI-AGENTEN** — `/todo-update` deckt Status, Kategorie/Unterkategorie
+> und Notizen ab. Soll auch der Titel, die Priorität oder verknüpfte Links
+> geändert werden, `/todo-edit <id>` verwenden (siehe unten) — der Befehl
+> deckt alle Felder eines Todos ab.
+
+### `/todo-edit <id>` — Todo vollständig bearbeiten (alle Felder)
+
+`/todo-update` deckt nur Status, Kategorie/Unterkategorie und Notizen ab.
+`/todo-edit` geht weiter: **alle** Felder eines Todos werden interaktiv
+bearbeitbar — zusätzlich Titel und Priorität, und bei den Notizen auch die
+verknüpften Links (`.todo-links`, siehe `/todo-link`) inklusive Entfernen
+oder Umbenennen bestehender Links, nicht nur Hinzufügen. Für reine
+Status-/Notiz-Änderungen bleibt `/todo-update` der kürzere Weg; wer auch
+Titel, Priorität oder Links ändern will, nutzt `/todo-edit`.
+
+Beispiel: `/todo-edit T004`
+
+Ablauf:
+
+1. Todo per ID finden, aktuellen Stand aller Felder anzeigen (Titel,
+   Priorität, Kategorie/Unterkategorie, Status, Notizen inkl. Links).
+2. Interaktiv abfragen, was geändert werden soll (jedes Feld einzeln
+   überspringbar — Enter übernimmt den bisherigen Wert):
+   - **Titel** — neuer Text ersetzt `<td class="titel-col">`.
+   - **Priorität** — `kritisch|hoch|mittel|niedrig`, ersetzt Klasse und Text
+     im `<span class="badge p-PRIO">`.
+   - **Kategorie/Unterkategorie** — wie bei `/todo-add`: vorhandene Werte zur
+     Wiederverwendung anzeigen, neue erlauben. Ändert `data-kategorie` /
+     `data-unterkategorie` und den Badge-Inhalt der Kategorie-Zelle
+     (`k-cat`/`crumb-sep`/`k-subcat`, entfällt ganz ohne Unterkategorie).
+   - **Status** — `offen|progress|done`. Badge-Klasse/-Text tauschen
+     (`s-offen|s-progress|s-done`). **Richtung beachten:**
+     - Wechsel zu `done`: `data-erledigt` auf den aktuellen Zeitpunkt setzen
+       (falls noch nicht gesetzt), `<span class="datum-erledigt">✓ YYYY-MM-DD</span>`
+       in der Datumsspalte ergänzen, Zeile bekommt `class="row-done"`.
+     - Wechsel von `done` zu `offen`/`progress`: `data-erledigt` **entfernen**,
+       das `datum-erledigt`-Span **entfernen**, `row-done` **entfernen**.
+     - Wechsel zwischen `offen` und `progress`: `data-erledigt` unverändert
+       lassen (bleibt in beiden Fällen unbesetzt).
+   - **Notizen** — Kurztext oder `<details>`-Langform, wie im Format oben
+     beschrieben.
+   - **Links** — bestehende `.todo-links`-Einträge einzeln anzeigen, mit
+     Auswahl: behalten, Label ändern, Ziel ändern, entfernen, oder neue
+     hinzufügen. Regeln aus `/todo-link` gelten unverändert (kein
+     `javascript:`/`data:`, keine Secrets, Duplikate vermeiden).
+3. `data-erstellt` **nie anfassen** — das Anlegedatum bleibt über die
+   gesamte Lebensdauer des Todos unverändert.
+4. Optional `data-bearbeitet="YYYY-MM-DDTHH:MM"` auf den aktuellen Zeitpunkt
+   setzen (analog zu `data-erledigt`, rein informativ — kein anderer Befehl
+   liest dieses Attribut, es dokumentiert nur „zuletzt geändert am").
+5. Alle geänderten Felder in einem Durchgang in die TODO.html schreiben,
+   danach kurz zusammenfassen, was sich geändert hat.
+
+Beispiel Vorher/Nachher (Prioritäts-, Status- und Link-Änderung):
+
+Vorher:
+
+~~~html
+<tr data-status="offen" data-prio="mittel" data-kategorie="backend"
+    data-erstellt="2026-06-16T09:00">
+  <td class="id-col">T004</td>
+  <td class="titel-col">API-Rate-Limiting einbauen</td>
+  <td><span class="badge k-cat">Backend</span></td>
+  <td><span class="badge p-mittel">Mittel</span></td>
+  <td><span class="badge s-offen">Offen</span></td>
+  <td class="quelle-col">Manuell</td>
+  <td class="notizen-col">Noch offen, kein Konzept.</td>
+  <td class="datum-col">2026-06-16</td>
+</tr>
+~~~
+
+Nachher (`/todo-edit T004`: Priorität → hoch, Status → done, Link ergänzt):
+
+~~~html
+<tr class="row-done" data-status="done" data-prio="hoch" data-kategorie="backend"
+    data-erstellt="2026-06-16T09:00" data-erledigt="2026-09-23T14:10"
+    data-bearbeitet="2026-09-23T14:10">
+  <td class="id-col">T004</td>
+  <td class="titel-col">API-Rate-Limiting einbauen</td>
+  <td><span class="badge k-cat">Backend</span></td>
+  <td><span class="badge p-hoch">Hoch</span></td>
+  <td><span class="badge s-done">✓ Erledigt</span></td>
+  <td class="quelle-col">Manuell</td>
+  <td class="notizen-col">Umgesetzt laut Konzept.
+    <div class="todo-links">
+      <a href="../WIKI/02-ARCHITEKTUR/RATE-LIMITING.md">Konzept</a>
+    </div>
+  </td>
+  <td class="datum-col">2026-06-16<span class="datum-erledigt">✓ 2026-09-23</span></td>
+</tr>
+~~~
 
 ### `/todo-add <titel>` — Neues Todo hinzufügen
 

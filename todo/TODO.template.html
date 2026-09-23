@@ -336,6 +336,196 @@
   .done-icon { opacity: .4; font-size: 12px; }
   .row-done td.titel-col { text-decoration: line-through; text-decoration-color: var(--muted); }
 
+  /* ── AKTIONEN-SPALTE / BEARBEITEN ── */
+  thead th.actions-th { cursor: default; width: 46px; }
+  thead th.actions-th:hover { color: var(--muted); }
+  td.actions-col { white-space: nowrap; text-align: center; }
+  .btn-row-edit {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 3px 7px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-row-edit:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-save-download {
+    padding: 7px 14px;
+    background: transparent;
+    border: 1px solid var(--green);
+    border-radius: 6px;
+    color: var(--green);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-save-download:hover { background: rgba(63,185,80,.12); }
+
+  /* ── BEARBEITEN-MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+  .modal-overlay[hidden] { display: none; }
+  .modal-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg2);
+  }
+  .modal-header h2 { font-size: 14px; color: var(--accent); }
+  .modal-close {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 2px 6px;
+  }
+  .modal-close:hover { color: var(--text); }
+  .modal-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 14px 18px;
+    border-top: 1px solid var(--border);
+  }
+  .form-row { display: flex; gap: 12px; }
+  .form-row .form-group { flex: 1; min-width: 0; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-group label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .form-group input[type="text"],
+  .form-group select,
+  .form-group textarea {
+    padding: 7px 10px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+  }
+  .form-group input[type="text"]:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--accent); }
+  .form-group textarea { resize: vertical; min-height: 50px; }
+  .edit-links-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 6px; }
+  .edit-link-row { display: flex; gap: 6px; }
+  .edit-link-row input {
+    flex: 1;
+    min-width: 0;
+    padding: 6px 8px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-size: 12px;
+  }
+  .edit-link-remove {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0 8px;
+  }
+  .edit-link-remove:hover { border-color: var(--red); color: var(--red); }
+  .btn-add-link {
+    align-self: flex-start;
+    padding: 5px 10px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .btn-add-link:hover { border-color: var(--cyan); color: var(--cyan); }
+  .btn-modal-cancel {
+    padding: 7px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--muted);
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .btn-modal-cancel:hover { border-color: var(--text); color: var(--text); }
+  .btn-modal-save {
+    padding: 7px 16px;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    color: var(--bg);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .btn-modal-save:hover { opacity: .88; }
+
+  /* ── HINWEIS-BANNER NACH BROWSER-BEARBEITUNG ── */
+  .edit-toast {
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg2);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text);
+    box-shadow: 0 6px 24px rgba(0,0,0,.4);
+    z-index: 1100;
+    max-width: 92vw;
+  }
+  .edit-toast[hidden] { display: none; }
+  .edit-toast button {
+    padding: 5px 10px;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 5px;
+    color: var(--bg);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .edit-toast #btnToastClose {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-weight: 400;
+  }
+
   /* ── FOOTER ── */
   footer {
     text-align: center;
@@ -391,6 +581,7 @@
     <button class="btn-toggle-done" id="btnDoneToggle" title="Erledigte Todos ein- oder ausblenden">✓ Erledigte ausblenden</button>
     <button class="btn-group" id="btnGroup" title="Nach Kategorie › Unterkategorie gruppieren">🗂 Gruppieren</button>
     <button class="btn-cleanup" id="btnCleanup" title="Erledigte Todos entfernen, deren Erledigungsdatum mehr als einen Monat zurückliegt">🧹 Aufräumen</button>
+    <button class="btn-save-download" id="btnSaveDownload" title="Aktuellen Stand (inkl. Browser-Änderungen) als TODO.html herunterladen">💾 Speichern (Download)</button>
     <button class="btn-reset" id="btnReset">↺ Reset</button>
   </div>
 </header>
@@ -418,6 +609,7 @@
           <th data-col="5">Quelle</th>
           <th data-col="6">Notizen</th>
           <th data-col="7">Datum</th>
+          <th class="actions-th">Aktionen</th>
         </tr>
       </thead>
       <tbody id="todoBody">
@@ -494,6 +686,79 @@
   <a href="https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL">MGD-ToDo-SKILL on GitHub</a>
 </footer>
 
+<!-- Bearbeiten-Modal: wird von jedem ✏️-Knopf pro Zeile geöffnet, siehe <script> unten. -->
+<div class="modal-overlay" id="editModal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="modal-header">
+      <h2 id="editModalTitle">Todo bearbeiten</h2>
+      <button type="button" class="modal-close" id="editCloseBtn" title="Schließen">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="editTitel">Titel</label>
+        <input type="text" id="editTitel">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editPrio">Priorität</label>
+          <select id="editPrio">
+            <option value="kritisch">Kritisch</option>
+            <option value="hoch">Hoch</option>
+            <option value="mittel">Mittel</option>
+            <option value="niedrig">Niedrig</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editStatus">Status</label>
+          <select id="editStatus">
+            <option value="offen">Offen</option>
+            <option value="progress">In Arbeit</option>
+            <option value="done">Erledigt</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editKategorie">Kategorie</label>
+          <input type="text" id="editKategorie" list="editKatList">
+          <datalist id="editKatList"></datalist>
+        </div>
+        <div class="form-group">
+          <label for="editUnterkategorie">Unterkategorie</label>
+          <input type="text" id="editUnterkategorie" list="editSubList">
+          <datalist id="editSubList"></datalist>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="editKurz">Notiz (Kurzbeschreibung)</label>
+        <input type="text" id="editKurz">
+      </div>
+      <div class="form-group">
+        <label for="editLang">Notiz (Langbeschreibung, optional)</label>
+        <textarea id="editLang" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Verknüpfte Links</label>
+        <div id="editLinksList" class="edit-links-list"></div>
+        <button type="button" class="btn-add-link" id="editAddLinkBtn">+ Link hinzufügen</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn-modal-cancel" id="editCancelBtn">Abbrechen</button>
+      <button type="button" class="btn-modal-save" id="editSaveBtn">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hinweis-Banner nach einer Browser-Bearbeitung: die Datei kann sich nicht
+     selbst überschreiben, siehe README „Erledigte Todos: ausblenden und
+     aufräumen" für dasselbe Muster beim Aufräumen-Knopf. -->
+<div class="edit-toast" id="editToast" hidden>
+  <span>Änderung im Browser übernommen — nutze „💾 Speichern (Download)" um sie dauerhaft zu machen.</span>
+  <button type="button" id="btnToastDownload">💾 Speichern (Download)</button>
+  <button type="button" id="btnToastClose" title="Hinweis schließen">✕</button>
+</div>
+
 <script>
 (function () {
   const table   = document.getElementById('todoTable');
@@ -506,9 +771,34 @@
   const btnGroup= document.getElementById('btnGroup');
   const btnDoneToggle = document.getElementById('btnDoneToggle');
   const btnCleanup    = document.getElementById('btnCleanup');
+  const btnSaveDownload = document.getElementById('btnSaveDownload');
   const noRes   = document.getElementById('noResults');
   const ths     = document.querySelectorAll('thead th[data-col]');
 
+  // ── Bearbeiten-Modal: DOM-Referenzen ──
+  const editModal        = document.getElementById('editModal');
+  const editCloseBtn     = document.getElementById('editCloseBtn');
+  const editCancelBtn    = document.getElementById('editCancelBtn');
+  const editSaveBtn      = document.getElementById('editSaveBtn');
+  const editTitel        = document.getElementById('editTitel');
+  const editPrio         = document.getElementById('editPrio');
+  const editStatus       = document.getElementById('editStatus');
+  const editKategorie    = document.getElementById('editKategorie');
+  const editUnterkategorie = document.getElementById('editUnterkategorie');
+  const editKatList      = document.getElementById('editKatList');
+  const editSubList      = document.getElementById('editSubList');
+  const editKurz         = document.getElementById('editKurz');
+  const editLang         = document.getElementById('editLang');
+  const editLinksList    = document.getElementById('editLinksList');
+  const editAddLinkBtn   = document.getElementById('editAddLinkBtn');
+  const editToast        = document.getElementById('editToast');
+  const btnToastDownload = document.getElementById('btnToastDownload');
+  const btnToastClose    = document.getElementById('btnToastClose');
+
+  const PRIO_LABELS   = { kritisch: 'Kritisch', hoch: 'Hoch', mittel: 'Mittel', niedrig: 'Niedrig' };
+  const STATUS_LABELS = { offen: 'Offen', progress: 'In Arbeit', done: '✓ Erledigt' };
+
+  let currentEditRow = null;
   let sortCol = -1, sortAsc = true;
   let grouped = false;
   let hideDone = false;
@@ -531,15 +821,22 @@
     }[c]));
   }
 
-  /* ── FREIE KATEGORIEN: Filter-Optionen aus den Daten ableiten ── */
-  function collectValues(attr, onlyWithinKat) {
+  /* ── FREIE KATEGORIEN: Filter-Optionen aus den Daten ableiten ──
+     valuesForAttr nimmt den Kategorie-Filterwert direkt entgegen, damit
+     sowohl die Kopfzeilen-Filter (fKat/fSub) als auch das Bearbeiten-Modal
+     (eigenes Eingabefeld, kein <select>) dieselbe Logik nutzen können. */
+  function valuesForAttr(attr, katValue) {
     const set = new Set();
     rows().forEach(r => {
-      if (onlyWithinKat && fKat.value && r.dataset.kategorie !== fKat.value) return;
+      if (katValue && r.dataset.kategorie !== katValue) return;
       const v = r.dataset[attr];
       if (v) set.add(v);
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b, 'de'));
+  }
+
+  function collectValues(attr, onlyWithinKat) {
+    return valuesForAttr(attr, onlyWithinKat ? fKat.value : null);
   }
 
   function populateKatOptions() {
@@ -629,7 +926,7 @@
     const tr = document.createElement('tr');
     tr.className = 'group-header' + (isSub ? ' group-header-sub' : '');
     const td = document.createElement('td');
-    td.colSpan = 8;
+    td.colSpan = 9;
     td.textContent = isSub ? ('› ' + text) : text;
     tr.appendChild(td);
     tbody.insertBefore(tr, beforeTr);
@@ -698,7 +995,28 @@
     if (kFilterSub) kFilterSub.innerHTML = '<option value="">Unterkategorie: Alle</option>';
     const kNoRes = doc.querySelector('#noResults');
     if (kNoRes) kNoRes.classList.remove('visible');
+    const kEditModal = doc.querySelector('#editModal');
+    if (kEditModal) kEditModal.setAttribute('hidden', '');
+    const kEditToast = doc.querySelector('#editToast');
+    if (kEditToast) kEditToast.setAttribute('hidden', '');
     return '<!doctype html>\n' + doc.outerHTML;
+  }
+
+  /* ── ALLGEMEINER DOWNLOAD: aktuellen Browser-Stand als TODO.html anbieten.
+     Genutzt vom Aufräumen-Knopf UND von jeder Bearbeiten-Speicherung —
+     eine im Browser geöffnete HTML kann sich nicht selbst überschreiben,
+     siehe README „Erledigte Todos: ausblenden und aufräumen". ── */
+  function downloadTodoHtml() {
+    const html = serialisieren();
+    const blob = new Blob([html], { type: 'text/html' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = 'TODO.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   }
 
   function cleanupOldDone() {
@@ -724,22 +1042,222 @@
 
     kandidaten.forEach(tr => tr.remove());
 
-    const html = serialisieren();
-    const blob = new Blob([html], { type: 'text/html' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href = url;
-    a.download = 'TODO.html';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    downloadTodoHtml();
 
     populateKatOptions();
     populateSubOptions();
     applyFilters();
 
     alert('Die heruntergeladene TODO.html muss die bestehende Datei ersetzen, sonst tauchen die entfernten Zeilen beim nächsten Öffnen wieder auf.');
+  }
+
+  /* ── ZEITSTEMPEL FÜR DIE BEARBEITEN-FUNKTION ── */
+  function nowStamp() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+      'T' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+  }
+  function todayDate() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
+  /* ── AKTIONEN-SPALTE: pro Zeile einen ✏️-Knopf ergänzen ──
+     Rein clientseitig ergänzt (nicht Teil der von Agenten geschriebenen
+     <tr>-Vorlage), damit /todo-add erzeugte Zeilen und ältere, noch nicht
+     migrierte Dateien ohne Anpassung funktionieren. Idempotent: eine Zeile,
+     die schon eine Aktionen-Zelle hat (z. B. aus einer zuvor heruntergeladenen
+     Datei), bekommt keine zweite. */
+  function ensureActionsColumn() {
+    rows().forEach(tr => {
+      if (tr.querySelector(':scope > td.actions-col')) return;
+      const td = document.createElement('td');
+      td.className = 'actions-col';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'btn-row-edit';
+      btn.title = 'Todo bearbeiten';
+      btn.textContent = '✏️';
+      btn.addEventListener('click', () => openEditModal(tr));
+      td.appendChild(btn);
+      tr.appendChild(td);
+    });
+  }
+
+  /* ── BEARBEITEN-MODAL: Notizen-Zelle lesen/schreiben ──
+     Eine Notizen-Zelle ist entweder reiner Text, reiner Text + .todo-links,
+     oder <details><summary>Kurz</summary>Lang + .todo-links</details> — siehe
+     SKILL.md „Dokumentations-Links im Todo-Format". parseNotizen liest alle
+     drei Formen in {kurz, lang, links}; buildNotizenHtml baut daraus wieder
+     eine dieser Formen. */
+  function parseNotizen(tr) {
+    const cell = tr.querySelector('td.notizen-col');
+    const clone = cell.cloneNode(true);
+    const links = [];
+    const linksDiv = clone.querySelector('.todo-links');
+    if (linksDiv) {
+      linksDiv.querySelectorAll('a').forEach(a => {
+        links.push({ label: a.textContent.trim(), href: a.getAttribute('href') || '' });
+      });
+      linksDiv.remove();
+    }
+    let kurz = '', lang = '';
+    const details = clone.querySelector('details');
+    if (details) {
+      const summary = details.querySelector('summary');
+      kurz = summary ? summary.textContent.trim() : '';
+      if (summary) summary.remove();
+      lang = details.textContent.trim();
+    } else {
+      kurz = clone.textContent.trim();
+    }
+    return { kurz, lang, links };
+  }
+
+  function buildNotizenHtml(kurz, lang, links) {
+    const linksHtml = links.length
+      ? '<div class="todo-links">' + links.map(l =>
+          `<a href="${escapeHtml(l.href)}">${escapeHtml(l.label)}</a>`
+        ).join(' ') + '</div>'
+      : '';
+    if (lang && lang.trim()) {
+      return `<details><summary>${escapeHtml(kurz)}</summary>${escapeHtml(lang)}${linksHtml}</details>`;
+    }
+    return `${escapeHtml(kurz)}${linksHtml}`;
+  }
+
+  function createLinkRow(label, href) {
+    const row = document.createElement('div');
+    row.className = 'edit-link-row';
+    const labelInput = document.createElement('input');
+    labelInput.type = 'text';
+    labelInput.className = 'edit-link-label';
+    labelInput.placeholder = 'Label';
+    labelInput.value = label || '';
+    const hrefInput = document.createElement('input');
+    hrefInput.type = 'text';
+    hrefInput.className = 'edit-link-href';
+    hrefInput.placeholder = 'Pfad oder URL';
+    hrefInput.value = href || '';
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'edit-link-remove';
+    removeBtn.title = 'Link entfernen';
+    removeBtn.textContent = '✕';
+    removeBtn.addEventListener('click', () => row.remove());
+    row.appendChild(labelInput);
+    row.appendChild(hrefInput);
+    row.appendChild(removeBtn);
+    return row;
+  }
+
+  function populateModalDatalists(currentKat) {
+    editKatList.innerHTML = valuesForAttr('kategorie', null)
+      .map(v => `<option value="${escapeHtml(v)}"></option>`).join('');
+    editSubList.innerHTML = valuesForAttr('unterkategorie', currentKat || null)
+      .map(v => `<option value="${escapeHtml(v)}"></option>`).join('');
+  }
+
+  function openEditModal(tr) {
+    currentEditRow = tr;
+    editTitel.value = tr.querySelector('td.titel-col').textContent.trim();
+    editPrio.value = tr.dataset.prio || 'mittel';
+    editStatus.value = tr.dataset.status || 'offen';
+    editKategorie.value = tr.dataset.kategorie || '';
+    editUnterkategorie.value = tr.dataset.unterkategorie || '';
+    const { kurz, lang, links } = parseNotizen(tr);
+    editKurz.value = kurz;
+    editLang.value = lang;
+    editLinksList.innerHTML = '';
+    links.forEach(l => editLinksList.appendChild(createLinkRow(l.label, l.href)));
+    populateModalDatalists(editKategorie.value);
+    editModal.hidden = false;
+    editTitel.focus();
+  }
+
+  function closeEditModal() {
+    editModal.hidden = true;
+    currentEditRow = null;
+  }
+
+  function showEditToast() { editToast.hidden = false; }
+  function hideEditToast() { editToast.hidden = true; }
+
+  /* ── BEARBEITEN-MODAL: Speichern schreibt live ins DOM zurück ──
+     Aktualisiert Titel, Priorität, Kategorie/Unterkategorie, Status (inkl.
+     data-erledigt/row-done je nach Wechselrichtung), Notizen und Links direkt
+     in der Zeile — sichtbar sofort, ohne dass die Datei sich selbst
+     überschreiben müsste. */
+  function applyEdit() {
+    if (!currentEditRow) return;
+    const tr = currentEditRow;
+
+    const titel = editTitel.value.trim();
+    if (!titel) {
+      alert('Titel darf nicht leer sein.');
+      editTitel.focus();
+      return;
+    }
+    const prio   = editPrio.value;
+    const status = editStatus.value;
+    const kat    = editKategorie.value.trim();
+    const sub    = editUnterkategorie.value.trim();
+    const links  = Array.from(editLinksList.querySelectorAll('.edit-link-row')).map(row => ({
+      label: row.querySelector('.edit-link-label').value.trim(),
+      href:  row.querySelector('.edit-link-href').value.trim()
+    })).filter(l => l.label && l.href);
+
+    // Titel
+    tr.querySelector('td.titel-col').textContent = titel;
+
+    // Priorität
+    tr.dataset.prio = prio;
+    tr.cells[3].innerHTML = `<span class="badge p-${prio}">${PRIO_LABELS[prio] || prio}</span>`;
+
+    // Kategorie / Unterkategorie
+    if (kat) tr.dataset.kategorie = kat; else delete tr.dataset.kategorie;
+    if (sub) tr.dataset.unterkategorie = sub; else delete tr.dataset.unterkategorie;
+    tr.cells[2].innerHTML = `<span class="badge k-cat">${escapeHtml(kat)}</span>` +
+      (sub ? ` <span class="crumb-sep">›</span> <span class="badge k-subcat">${escapeHtml(sub)}</span>` : '');
+
+    // Status + Erledigt-Zeitstempel (Richtung des Wechsels entscheidet)
+    const wasDone = tr.dataset.status === 'done';
+    const nowDone = status === 'done';
+    tr.dataset.status = status;
+    tr.cells[4].innerHTML = `<span class="badge s-${status}">${STATUS_LABELS[status] || status}</span>`;
+    const datumCell = tr.cells[7];
+    let erledigtSpan = datumCell.querySelector('.datum-erledigt');
+    if (nowDone && !wasDone) {
+      tr.dataset.erledigt = nowStamp();
+      if (!erledigtSpan) {
+        erledigtSpan = document.createElement('span');
+        erledigtSpan.className = 'datum-erledigt';
+        datumCell.appendChild(erledigtSpan);
+      }
+      erledigtSpan.textContent = '✓ ' + todayDate();
+    } else if (!nowDone && wasDone) {
+      delete tr.dataset.erledigt;
+      if (erledigtSpan) erledigtSpan.remove();
+    }
+    tr.classList.toggle('row-done', nowDone);
+
+    // Notizen + Links
+    tr.querySelector('td.notizen-col').innerHTML =
+      buildNotizenHtml(editKurz.value.trim(), editLang.value.trim(), links);
+    if (links.length) tr.dataset.links = links.map(l => l.href).join(';');
+    else delete tr.dataset.links;
+
+    // Bearbeitungszeitpunkt — rein informativ, analog zu data-erledigt,
+    // bricht keine bestehende Logik (kein anderer Teil des Skripts liest es).
+    tr.dataset.bearbeitet = nowStamp();
+
+    closeEditModal();
+    populateKatOptions();
+    populateSubOptions();
+    applyFilters();
+    showEditToast();
   }
 
   /* ── STATS ── */
@@ -762,7 +1280,21 @@
   btnGroup.addEventListener('click', toggleGroup);
   btnDoneToggle.addEventListener('click', toggleDone);
   btnCleanup.addEventListener('click', cleanupOldDone);
+  btnSaveDownload.addEventListener('click', downloadTodoHtml);
   ths.forEach(th => th.addEventListener('click', () => sortTable(+th.dataset.col)));
+
+  // Bearbeiten-Modal
+  editCloseBtn.addEventListener('click', closeEditModal);
+  editCancelBtn.addEventListener('click', closeEditModal);
+  editSaveBtn.addEventListener('click', applyEdit);
+  editAddLinkBtn.addEventListener('click', () => editLinksList.appendChild(createLinkRow('', '')));
+  editKategorie.addEventListener('input', () => populateModalDatalists(editKategorie.value));
+  editModal.addEventListener('click', (e) => { if (e.target === editModal) closeEditModal(); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !editModal.hidden) closeEditModal();
+  });
+  btnToastDownload.addEventListener('click', () => { downloadTodoHtml(); hideEditToast(); });
+  btnToastClose.addEventListener('click', hideEditToast);
   document.getElementById('btnReset').addEventListener('click', () => {
     search.value = '';
     fStatus.value = fPrio.value = fKat.value = fSub.value = '';
@@ -776,6 +1308,7 @@
   });
 
   /* ── INIT ── */
+  ensureActionsColumn();
   populateKatOptions();
   populateSubOptions();
   applyFilters();

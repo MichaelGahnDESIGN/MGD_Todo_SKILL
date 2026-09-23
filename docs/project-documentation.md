@@ -72,3 +72,15 @@ Nie indexieren oder verlinken:
 ## Agenten-Kooperation
 
 Vor Änderungen an TODO oder Dokumentation den aktuellen Stand lesen. Nach einer Produktentscheidung zuerst die aktuelle Fachseite aktualisieren, dann Todo/Archiv. So können Claude Code und Codex kooperieren, ohne dass ein älterer Chat die neuere Spezifikation überschreibt.
+
+## Verhältnis zu MGD_Living-Documentation
+
+Die oben beschriebene WIKI-Struktur (`00-PROJEKT/` … `09-OFFENE-FRAGEN/`) ist
+eine leichtgewichtige, projekteigene Variante. Wer stattdessen eine
+vollständige lebendige Dokumentation mit Entscheidungs-, Risiko- und
+Prüfnachweis-Modell will, findet das im eigenständigen Skill
+[MGD_Living-Documentation](https://github.com/MichaelGahnDESIGN/MGD_Living-Documentation)
+— beide schließen sich nicht aus. Ist Living-Documentation im Projekt
+installiert, zeigt `/todo-link` sinnvollerweise auf deren Entscheidungs- oder
+Risiko-Abschnitte statt auf eine eigene `01-ENTSCHEIDUNGEN/`-Seite, damit es
+nur eine kanonische Quelle je Entscheidung gibt.
