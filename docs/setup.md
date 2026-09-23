@@ -79,6 +79,18 @@ Oder manuell: Erstelle `PROJEKT/TODO/.todo-config` mit dem Pfad zur HTML-Datei (
 /todo-debug      # Strukturprüfung
 ```
 
+## Begleit-Skills beim Ersteinrichten
+
+`/todo-setup` prüft am Ende des Setup-Dialogs einmalig, ob die drei anderen
+Kern-Begleit-Skills von Michael Gahn im Projekt oder global bereits vorhanden
+sind: **MGD_DEV_SKILL**, **Fragenkatalog-Skill** und
+**MGD_Living-Documentation**. Fehlt einer, fragt der Agent aktiv nach, ob er
+ihn per `git clone` mitinstallieren soll — mit der jeweils im Zielrepo
+dokumentierten Ordnerstruktur, nicht geraten. Details zur Prüf-Logik stehen in
+[SKILL.md](../SKILL.md#todo-setup--neues-projekt-einrichten-einmalig). Diese
+Prüfung läuft nur beim ersten `/todo-setup` eines Projekts, nicht bei jedem
+`/todo`-Aufruf danach.
+
 ## Bestehendes Projekt vom Altformat migrieren
 
 Läuft im Projekt bereits eine `TODO.html` mit IDs im Format `T-001` (mit

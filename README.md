@@ -252,11 +252,33 @@ ausdruecklich.
 | [Integration](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL/wiki/Integration) | Zusammenspiel mit anderen MGD-Skills |
 | [Setup](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL/wiki/Setup) | Installation und Konfiguration im Detail |
 
+## Die 4 Kern-Begleit-Skills
+
+Dieser Skill bildet zusammen mit drei weiteren MGD-Skills ein Set, das in
+Projekten oft gemeinsam sinnvoll ist — jeder funktioniert auch allein, das
+Zusammenspiel ist optional:
+
+| Skill | Repo | Zusammenspiel mit `/todo` |
+|---|---|---|
+| **MGD_DEV_SKILL** | [MichaelGahnDESIGN/MGD_DEV_SKILL](https://github.com/MichaelGahnDESIGN/MGD_DEV_SKILL) | `/todo` vor jedem Release aufrufen — kritische Todos blockieren den Release. |
+| **Fragenkatalog-Skill** | [MichaelGahnDESIGN/Fragenkatalog-Skill](https://github.com/MichaelGahnDESIGN/Fragenkatalog-Skill) | Beantwortete Fragen aus dem Fragenkatalog, die noch Folgearbeit brauchen, per `/todo-add` als Todo übernehmen. |
+| **MGD_Todo_SKILL** (dieses Repo) | [MichaelGahnDESIGN/MGD_Todo_SKILL](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL) | Operative Aufgabenliste — Einstiegspunkt für den Tagesbetrieb. |
+| **MGD_Living-Documentation** | [MichaelGahnDESIGN/MGD_Living-Documentation](https://github.com/MichaelGahnDESIGN/MGD_Living-Documentation) | `/todo-link` verweist direkt auf Entscheidungs-, Risiko- oder Architekturabschnitte der Living-Documentation, statt Kontext im Todo selbst zu duplizieren. |
+
+> [!TIP]
+> **🤖 FÜR KI-AGENTEN** — `/todo-setup` prüft beim allerersten Einrichten
+> eines Projekts aktiv, ob die drei anderen Begleit-Skills bereits installiert
+> sind, und fragt bei fehlenden gezielt nach, ob sie mitinstalliert werden
+> sollen (siehe [SKILL.md](SKILL.md#todo-setup--neues-projekt-einrichten-einmalig)).
+> Das ist eine echte, einmalige Prüf-Logik, kein reiner Textbaustein.
+
 ## Integration mit anderen Skills
 
 Dieser Skill ist darauf ausgelegt, mit anderen KI-Skills zusammenzuarbeiten:
 
 - **[MGD_DEV_SKILL](https://github.com/MichaelGahnDESIGN/MGD_DEV_SKILL)** — vor jedem Deploy `/todo` aufrufen: kritische Todos blockieren den Release
+- **[Fragenkatalog-Skill](https://github.com/MichaelGahnDESIGN/Fragenkatalog-Skill)** — offene, aus Nutzerperspektive beantwortete Fragen per `/todo-add` als Todo übernehmen
+- **[MGD_Living-Documentation](https://github.com/MichaelGahnDESIGN/MGD_Living-Documentation)** — `/todo-link` verweist auf Entscheidungs- oder Risiko-Abschnitte der Living-Documentation
 - **[MGD_AI-PlayTest_SKILL](https://github.com/MichaelGahnDESIGN/MGD_AI-PlayTest_SKILL)** — nach Playtest `/todo-sync` aufrufen: neue Bugfix-Todos automatisch importieren
 - **[MGD_ProjectClean_SKILL](https://github.com/MichaelGahnDESIGN/MGD_ProjectClean_SKILL)** — `/todo-export` für Release-Notes als Anhang
 - **[MGD_AI-Project-Updater_SKILL](https://github.com/MichaelGahnDESIGN/MGD_AI-Project-Updater_SKILL)** — nach Staging-Tests Todos synchronisieren

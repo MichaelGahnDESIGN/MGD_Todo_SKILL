@@ -26,6 +26,13 @@
   letzten Bearbeitung festhält (analog zu `data-erledigt`). Rein
   informativ, kein anderer Befehl wertet es aus; `data-erstellt` bleibt
   davon unberührt.
+- **Begleit-Skill-Check in `/todo-setup`.** Am Ende des Setup-Dialogs prüft
+  der Agent jetzt einmalig, ob die drei anderen Kern-Begleit-Skills
+  (MGD_DEV_SKILL, Fragenkatalog-Skill, MGD_Living-Documentation) im Projekt
+  oder global installiert sind, und fragt bei fehlenden aktiv nach, ob sie
+  per `git clone` mitinstalliert werden sollen. Ergänzend im README ein neuer
+  Abschnitt „Die 4 Kern-Begleit-Skills" mit den konkreten Zusammenspiel-Sätzen
+  je Skill.
 
 ## 1.3.0 — 2026-09-20
 
