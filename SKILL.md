@@ -31,6 +31,34 @@ Der aktuelle Pfad wird in `PROJEKT/TODO/.todo-config` gespeichert.
 
 ---
 
+## Living Documentation als fester Teil des Workflows
+
+Ist **MGD_Living-Documentation** im Projekt installiert oder in den
+Projektregeln als kanonische Wissensquelle benannt, arbeitet `/todo` mit ihr
+als einer zusammengehörigen Dokumentationskette:
+
+- Die TODO.html bleibt die operative Liste: konkrete Arbeit, Status,
+  Priorität, Quelle und nächste Prüfung.
+- Die Living Documentation bleibt die fachliche Wahrheit: Entscheidungen,
+  Risiken, Architektur, Testnachweise und dauerhaft relevante Grenzen.
+- Bei einer relevanten Änderung zuerst die passende Living-Documentation-Seite
+  lesen und aktualisieren, dann das Todo mit `/todo-link` auf genau diese
+  kanonische Seite verknüpfen. Kontext nicht als zweite, abweichende
+  Spezifikation in die TODO kopieren.
+- Beim Schließen eines Todos prüfen, ob eine Entscheidung, ein Risiko oder ein
+  Testnachweis fortgeschrieben werden muss. Ist dies offen, bleibt das Todo
+  `progress` oder verweist auf ein separates offenes Dokumentations-Todo.
+- Ein lokaler Dokumentationsstand, ein Commit, ein GitHub-Push und ein
+  Deployment sind vier unterschiedliche Nachweise. Sie dürfen weder im
+  Status noch in der Notiz gleichgesetzt werden.
+
+Die Integration ist absichtlich pfadneutral: Sie respektiert den vom Projekt
+vorgegebenen Speicherort der Living Documentation. Externe oder private
+Dokumentationen werden nicht kopiert, synchronisiert oder veröffentlicht,
+solange das Projekt dies nicht ausdrücklich vorsieht.
+
+---
+
 ## Format (ab Version 1.0.0)
 
 **IDs:** `TNNN`, ohne Bindestrich (`T001`, `T002`, … `T199`, `T1200`, …).
@@ -542,6 +570,7 @@ Geeignete Ziele sind insbesondere:
 
 - `README.md`, `PRODUCT.md`, `CLAUDE.md`, `AGENTS.md`
 - Dateien unter `WIKI/`, `DOCS/`, `docs/`
+- die in Projektregeln oder Manifest als kanonisch benannte Living Documentation
 - Architektur-, Entscheidungs-, Rechts-, Test- und Übergabedokumente
 - GitHub-Issues oder andere vertrauenswürdige HTTPS-Quellen
 
@@ -584,7 +613,9 @@ Suche in dieser Reihenfolge:
 1. `README.md`, `PRODUCT.md`, `CLAUDE.md`, `AGENTS.md`
 2. `WIKI/README.md`
 3. Markdown-/HTML-Einstiegsseiten unter `WIKI/`, `DOCS/`, `docs/`
-4. optional Architektur-, Roadmap-, Entscheidungs- und Rechtsdokumente, die in
+4. die projektlokal erreichbare Startseite der Living Documentation, wenn sie
+   in Projektregeln, Manifest oder vorhandenen Todo-Links eindeutig benannt ist
+5. optional Architektur-, Roadmap-, Entscheidungs- und Rechtsdokumente, die in
    offenen Todos verlinkt sind
 
 Regeln:
@@ -595,6 +626,9 @@ Regeln:
 - tote Links entfernen
 - keine Secrets, Backups, `.env`, Zugangsdaten oder Binärdateien indexieren
 - vorhandene manuelle Links respektieren, wenn sie noch gültig sind
+- einen externen oder privaten Living-Documentation-Pfad nicht als Web-Link
+  ausgeben und nicht in das Projekt kopieren; nur einen bereits freigegebenen,
+  projektlokal erreichbaren Einstieg verlinken
 
 Das Template enthält dafür
 `<section class="project-index" id="projectIndex" ...>`. Ist der Index leer,

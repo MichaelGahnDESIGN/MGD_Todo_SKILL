@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Geändert
+
+- **Living Documentation ist jetzt ausdrücklich Teil des öffentlichen
+  `/todo`-Workflows.** `SKILL.md` trennt operative Aufgaben von kanonischen
+  Entscheidungen, Risiken und Testnachweisen, verlangt bei relevanten
+  Änderungen eine Verknüpfung mit `/todo-link` und hält lokale Änderung,
+  Commit, GitHub-Push und Deployment als getrennte Nachweise fest.
+
 ### Neu
 
 - **`/todo-edit <id>`.** Bearbeitet alle Felder eines Todos: Titel, Priorität,

@@ -342,6 +342,14 @@ Angaben gemäß § 5 DDG — Siehe [`IMPRESSUM.md`](IMPRESSUM.md).
 
 Seit Version 1.3.0 kann der Skill Todos direkt mit Projektdokumentation verknüpfen und die TODO.html als operativen Einstieg in komplexe Projekt-Wikis verwenden.
 
+**Living Documentation gehört zum Workflow:** TODO führt Aufgaben, Status und
+Priorität; die kanonische Living Documentation führt Entscheidungen, Risiken
+und Testnachweise. Bei relevanten Änderungen wird die Fachseite zuerst
+aktualisiert und das Todo anschließend mit `/todo-link` verknüpft oder
+geschlossen. Ein lokaler Stand, ein Commit, ein GitHub-Push und ein Deployment
+bleiben getrennte Nachweise. Private oder externe Living-Documentation-Quellen
+werden nicht automatisch kopiert oder veröffentlicht.
+
 Neue Befehle:
 
 - `/todo-link <id> <pfad-oder-url> [label]` verknüpft ein Todo mit Spezifikation, Architektur, Rechtsrecherche oder anderen Quellen.

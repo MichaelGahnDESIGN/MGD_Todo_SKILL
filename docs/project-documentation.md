@@ -84,3 +84,12 @@ Prüfnachweis-Modell will, findet das im eigenständigen Skill
 installiert, zeigt `/todo-link` sinnvollerweise auf deren Entscheidungs- oder
 Risiko-Abschnitte statt auf eine eigene `01-ENTSCHEIDUNGEN/`-Seite, damit es
 nur eine kanonische Quelle je Entscheidung gibt.
+
+Die Living Documentation ist damit nicht nur ein optionaler Begleit-Skill,
+sondern Teil des öffentlichen `/todo`-Workflows: TODO verwaltet den
+Arbeitsstatus, die Living Documentation den dauerhaften fachlichen Nachweis.
+Bei relevanten Änderungen wird zuerst die kanonische Fachseite aktualisiert
+und anschließend das Todo verlinkt oder geschlossen. Ein lokaler Stand, ein
+Git-Commit, ein GitHub-Push und ein Deployment bleiben getrennte Nachweise.
+Private oder externe Living-Documentation-Speicherorte werden dabei nicht
+automatisch in ein Repository kopiert oder veröffentlicht.
