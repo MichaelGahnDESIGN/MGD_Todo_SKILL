@@ -1,8 +1,73 @@
 # Changelog
 
+## Unreleased
+
+### Geändert
+
+- **Living Documentation ist jetzt ausdrücklich Teil des öffentlichen
+  `/todo`-Workflows.** `SKILL.md` trennt operative Aufgaben von kanonischen
+  Entscheidungen, Risiken und Testnachweisen, verlangt bei relevanten
+  Änderungen eine Verknüpfung mit `/todo-link` und hält lokale Änderung,
+  Commit, GitHub-Push und Deployment als getrennte Nachweise fest.
+
+### Neu
+
+- **`/todo-edit <id>`.** Bearbeitet alle Felder eines Todos: Titel, Priorität,
+  Kategorie/Unterkategorie, Status (inkl. korrektem Setzen/Entfernen von
+  `data-erledigt` und `row-done` je nach Richtung des Statuswechsels),
+  Notizen und verknüpfte Links (`.todo-links`) — inklusive Entfernen oder
+  Umbenennen bestehender Links, nicht nur Hinzufügen. `/todo-update` bleibt
+  unverändert der kürzere Weg für reine Status-/Notiz-Änderungen.
+- **Bearbeiten-Modal direkt in der TODO.html.** Jede Zeile bekommt einen
+  ✏️-Knopf (neue Spalte „Aktionen", clientseitig ergänzt — funktioniert
+  auch mit älteren, noch nicht migrierten Dateien). Öffnet ein Modal mit
+  allen Feldern; „Speichern" schreibt die Änderung sofort sichtbar ins DOM
+  zurück. Escape-Taste oder Klick außerhalb schließt das Modal ohne
+  Änderung.
+- **Genereller „💾 Speichern (Download)"-Knopf** in der Kopfzeile — bietet
+  den aktuellen Browser-Stand jederzeit als `TODO.html`-Download an, nicht
+  nur nach dem Aufräumen. Nach jeder Bearbeitung erscheint zusätzlich ein
+  Hinweis-Banner mit demselben Download-Knopf, weil eine im Browser
+  geöffnete HTML sich nicht selbst überschreiben kann (gleiches Muster wie
+  beim bestehenden Aufräum-Knopf).
+- **`data-bearbeitet`** — neues, optionales Attribut, das den Zeitpunkt der
+  letzten Bearbeitung festhält (analog zu `data-erledigt`). Rein
+  informativ, kein anderer Befehl wertet es aus; `data-erstellt` bleibt
+  davon unberührt.
+- **Begleit-Skill-Check in `/todo-setup`.** Am Ende des Setup-Dialogs prüft
+  der Agent jetzt einmalig, ob die drei anderen Kern-Begleit-Skills
+  (MGD_DEV_SKILL, Fragenkatalog-Skill, MGD_Living-Documentation) im Projekt
+  oder global installiert sind, und fragt bei fehlenden aktiv nach, ob sie
+  per `git clone` mitinstalliert werden sollen. Ergänzend im README ein neuer
+  Abschnitt „Die 4 Kern-Begleit-Skills" mit den konkreten Zusammenspiel-Sätzen
+  je Skill.
+
+## 1.3.0 — 2026-09-20
+
+### Neu
+
+- **Dokumentationsindex in TODO.html.** Das Template besitzt jetzt eine optionale, von `/todo-index` gepflegte Projekt-Linkleiste.
+- **`/todo-link`.** Todos können direkt auf Spezifikationen, Architektur, Rechtsrecherche, Issues oder andere Projektquellen verweisen.
+- **`/todo-index`.** Baut einen kompakten Einstieg zu README, PRODUCT, CLAUDE, AGENTS, WIKI/DOCS und todo-relevanten Dokumenten.
+- **`/todo-doc-init`.** Optionaler Wiki-Start für komplexe Projekte, ohne bestehende DOCS-Strukturen zu duplizieren.
+- **`/todo-archive`.** Datierte Planungs-/Entscheidungsarchive mit der Regel, dauerhafte Entscheidungen zusätzlich in die aktuelle Fach-Doku zu übernehmen.
+- **Link-Styles im HTML-Template.** Projektlinks und Todo-Links sind direkt klickbar und bleiben über die Volltextsuche auffindbar.
+
 Versionsnummern folgen [Semantic Versioning](https://semver.org/lang/de/):
 MAJOR bei Breaking Changes am HTML-/ID-Format, MINOR bei neuen Fähigkeiten
 ohne Breaking Change, PATCH bei Fehlerbehebungen.
+
+## 1.2.0 — 2026-09-19
+
+### Neu
+
+- **`/info` — Projekt-Status-Schnappschuss.** Beantwortet „wie ist der Stand?"
+  in wenigen Zeilen: Git-Zustand (Branch, saubere/offene Arbeitskopie, letzter
+  Commit, Abgleich mit dem Remote-Tracking-Branch), dieselbe Todo-Statistik
+  wie am Ende von `/todo-debug`, und optional ein einfacher Statuscode-Check
+  gegen eine erkennbare Live-URL. Ergänzt `/todo` (Fokus auf die Aufgaben-
+  liste) um den Gesamtblick auf das Repo, ohne `git status`/`git log` von
+  Hand zusammensuchen zu müssen.
 
 ## 1.1.1 — 2026-09-01
 

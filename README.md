@@ -1,12 +1,32 @@
+<!-- MGD-HEADER -->
+<p align="center"><a href="https://Michael-Gahn.de"><img src="assets/mgd-logo.png" alt="Michael Gahn DESIGN" width="48"></a></p>
+
+<p align="center"><img src="assets/banner.svg" alt="MGD Todo" width="100%"></p>
+
+<p align="center">
+  <img alt="Lizenz" src="https://img.shields.io/github/license/MichaelGahnDESIGN/MGD_Todo_SKILL?label=Lizenz">
+  <a href="https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/MichaelGahnDESIGN/MGD_Todo_SKILL?label=Release"></a>
+  <img alt="Sprache" src="https://img.shields.io/badge/Sprache-HTML-2f6fed">
+  <a href="https://Michael-Gahn.de"><img alt="by Michael Gahn DESIGN" src="https://img.shields.io/badge/by-Michael%20Gahn%20DESIGN-cd1616"></a>
+</p>
+<!-- /MGD-HEADER -->
+
 # MGD — ToDo SKILL
 
 Ein universeller Skill für KI-Agenten (Claude Code & ChatGPT Codex), der Projekt-Todos in einer **selbst-gehosteten, sortierbaren und durchsuchbaren `TODO.html`** verwaltet — mit frei anlegbaren Kategorien und Unterkategorien, ohne externe Services, ohne Datenbank, vollständig im eigenen Repo.
 
 > [!NOTE]
-> **👤 FÜR ENTWICKLER** — Aktuell ist **1.1.1**. Seit 1.1.0 trägt jedes Todo
-> Zeitstempel, erledigte lassen sich ausblenden und nach einer Aufbewahrungsfrist
-> aufräumen. Seit 1.0.0 heißen IDs `TNNN` statt `T-NNN` und Kategorien sind
-> Freitext statt eines festen Enums.
+> **👤 FÜR ENTWICKLER** — Aktuell ist **1.2.0**. Neu: `/todo-edit <id>`
+> bearbeitet alle Felder eines Todos (Titel, Priorität, Kategorie/
+> Unterkategorie, Status, Notizen, Links) — `/todo-update` deckte davon nur
+> Status/Kategorie/Notizen ab. Dazu bekommt die TODO.html selbst einen
+> ✏️-Bearbeiten-Knopf pro Zeile mit In-Browser-Modal, siehe „Todos direkt im
+> Browser bearbeiten" unten. Seit 1.2.0 gibt es `/info`, einen kompakten
+> Projekt-Status-Schnappschuss (Git-Zustand, Todo-Statistik, optionaler
+> Live-Check). Seit 1.1.0 trägt jedes Todo Zeitstempel, erledigte lassen sich
+> ausblenden und nach einer Aufbewahrungsfrist aufräumen. Seit 1.0.0 heißen
+> IDs `TNNN` statt `T-NNN` und Kategorien sind Freitext statt eines festen
+> Enums.
 >
 > Eine bestehende `TODO.html` läuft unverändert weiter. Für die neuen
 > Möglichkeiten einmalig `/todo-migrate` aufrufen — der Befehl erkennt selbst,
@@ -75,12 +95,14 @@ codex --instructions .codex/commands/todo.md "/todo"
 | `/todo-add <titel>` | Fügt ein neues Todo in die HTML ein |
 | `/todo-close <id>` | Markiert ein Todo als erledigt |
 | `/todo-update` | Interaktives Aktualisieren von Status und Notizen |
+| `/todo-edit <id>` | Interaktives Bearbeiten aller Felder: Titel, Priorität, Kategorie/Unterkategorie, Status, Notizen, Links |
 | `/todo-pfad <pfad>` | Setzt den Pfad zur TODO.html (gespeichert in `.todo-config`) |
 | `/todo-sync` | Importiert neue Todos aus Projekt-Quellen (PlayTest, CODEX-TASKS, …) |
 | `/todo-debug` | Validiert die HTML-Struktur, findet kaputte Einträge |
 | `/todo-migrate` | Bringt eine bestehende TODO.html vom Alt- aufs aktuelle Format |
 | `/todo-cleanup` | Entfernt erledigte Todos, deren Erledigung länger zurückliegt (Standard: ein Monat) |
 | `/todo-export` | Markdown-Export aller offenen Todos |
+| `/info` | Kompakter Projekt-Status-Schnappschuss: Git-Zustand, Todo-Statistik, optionaler Live-Check |
 
 > [!TIP]
 > **🤖 FÜR KI-AGENTEN** — `/todo-sync` kennt genau drei Quellen und schlägt neue Einträge zur Bestätigung vor, statt sie automatisch anzulegen: `PlayTest/Test-Todo.md` (offene Checkboxen `- [ ]`), `AI/CODEX-TASKS/*.md` (Aufgaben-Titel aus H2/H3-Überschriften) und `PROJEKT/TODO/*.md` (weitere Todo-Dateien).
@@ -161,6 +183,32 @@ Absicht: lieber eine alte Zeile zu viel behalten als eine fälschlich entfernen.
 
 Offene Todos werden nie automatisch entfernt.
 
+## Todos direkt im Browser bearbeiten
+
+Jede Zeile in der TODO.html hat einen ✏️-Knopf (Spalte „Aktionen"). Klick
+öffnet ein Modal mit allen Feldern — Titel, Priorität, Kategorie,
+Unterkategorie, Status, Notiz (kurz/lang) und verknüpfte Links (siehe
+`/todo-link`). „Speichern" schreibt die Änderung sofort sichtbar ins DOM
+zurück, inklusive Badge-Wechsel bei Priorität/Status.
+
+| Ziel | Mittel | Ändert die Datei? |
+| --- | --- | --- |
+| Ein Todo im Browser bearbeiten | ✏️-Knopf pro Zeile → Modal → „Speichern" | nur im DOM, nicht auf der Festplatte |
+| Die Browser-Änderung dauerhaft machen | Knopf „💾 Speichern (Download)" (Kopfzeile oder Hinweis-Banner) | ja, per Download |
+| Alle Felder per Agent bearbeiten | `/todo-edit <id>` | ja, direkt |
+
+> [!IMPORTANT]
+> Dieselbe Einschränkung wie beim Aufräumen: Eine im Browser geöffnete HTML
+> kann sich **nicht selbst überschreiben**. „Speichern" im Modal aktualisiert
+> nur die laufende Ansicht und zeigt danach einen Hinweis-Banner mit
+> „💾 Speichern (Download)" — die heruntergeladene Datei muss die bestehende
+> `TODO.html` ersetzen, sonst ist die Änderung beim nächsten Öffnen weg. Der
+> Download-Knopf steht zusätzlich dauerhaft in der Kopfzeile, nutzbar nach
+> jeder Browser-Änderung, nicht nur nach dem Bearbeiten-Modal.
+
+Escape-Taste oder Klick außerhalb des Modals schließt es ohne Änderung —
+ein Abbruch verwirft nichts an der Zeile.
+
 ## Bestehende TODO.html migrieren
 
 `/todo-migrate` bringt eine vorhandene Datei auf den aktuellen Stand und
@@ -217,11 +265,33 @@ ausdruecklich.
 | [Integration](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL/wiki/Integration) | Zusammenspiel mit anderen MGD-Skills |
 | [Setup](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL/wiki/Setup) | Installation und Konfiguration im Detail |
 
+## Die 4 Kern-Begleit-Skills
+
+Dieser Skill bildet zusammen mit drei weiteren MGD-Skills ein Set, das in
+Projekten oft gemeinsam sinnvoll ist — jeder funktioniert auch allein, das
+Zusammenspiel ist optional:
+
+| Skill | Repo | Zusammenspiel mit `/todo` |
+|---|---|---|
+| **MGD_DEV_SKILL** | [MichaelGahnDESIGN/MGD_DEV_SKILL](https://github.com/MichaelGahnDESIGN/MGD_DEV_SKILL) | `/todo` vor jedem Release aufrufen — kritische Todos blockieren den Release. |
+| **Fragenkatalog-Skill** | [MichaelGahnDESIGN/Fragenkatalog-Skill](https://github.com/MichaelGahnDESIGN/Fragenkatalog-Skill) | Beantwortete Fragen aus dem Fragenkatalog, die noch Folgearbeit brauchen, per `/todo-add` als Todo übernehmen. |
+| **MGD_Todo_SKILL** (dieses Repo) | [MichaelGahnDESIGN/MGD_Todo_SKILL](https://github.com/MichaelGahnDESIGN/MGD_Todo_SKILL) | Operative Aufgabenliste — Einstiegspunkt für den Tagesbetrieb. |
+| **MGD_Living-Documentation** | [MichaelGahnDESIGN/MGD_Living-Documentation](https://github.com/MichaelGahnDESIGN/MGD_Living-Documentation) | `/todo-link` verweist direkt auf Entscheidungs-, Risiko- oder Architekturabschnitte der Living-Documentation, statt Kontext im Todo selbst zu duplizieren. |
+
+> [!TIP]
+> **🤖 FÜR KI-AGENTEN** — `/todo-setup` prüft beim allerersten Einrichten
+> eines Projekts aktiv, ob die drei anderen Begleit-Skills bereits installiert
+> sind, und fragt bei fehlenden gezielt nach, ob sie mitinstalliert werden
+> sollen (siehe [SKILL.md](SKILL.md#todo-setup--neues-projekt-einrichten-einmalig)).
+> Das ist eine echte, einmalige Prüf-Logik, kein reiner Textbaustein.
+
 ## Integration mit anderen Skills
 
 Dieser Skill ist darauf ausgelegt, mit anderen KI-Skills zusammenzuarbeiten:
 
 - **[MGD_DEV_SKILL](https://github.com/MichaelGahnDESIGN/MGD_DEV_SKILL)** — vor jedem Deploy `/todo` aufrufen: kritische Todos blockieren den Release
+- **[Fragenkatalog-Skill](https://github.com/MichaelGahnDESIGN/Fragenkatalog-Skill)** — offene, aus Nutzerperspektive beantwortete Fragen per `/todo-add` als Todo übernehmen
+- **[MGD_Living-Documentation](https://github.com/MichaelGahnDESIGN/MGD_Living-Documentation)** — `/todo-link` verweist auf Entscheidungs- oder Risiko-Abschnitte der Living-Documentation
 - **[MGD_AI-PlayTest_SKILL](https://github.com/MichaelGahnDESIGN/MGD_AI-PlayTest_SKILL)** — nach Playtest `/todo-sync` aufrufen: neue Bugfix-Todos automatisch importieren
 - **[MGD_ProjectClean_SKILL](https://github.com/MichaelGahnDESIGN/MGD_ProjectClean_SKILL)** — `/todo-export` für Release-Notes als Anhang
 - **[MGD_AI-Project-Updater_SKILL](https://github.com/MichaelGahnDESIGN/MGD_AI-Project-Updater_SKILL)** — nach Staging-Tests Todos synchronisieren
@@ -267,3 +337,64 @@ MIT — frei verwendbar, anpassbar, weitergeben mit Namensnennung. Siehe [LICENS
 ## Impressum
 
 Angaben gemäß § 5 DDG — Siehe [`IMPRESSUM.md`](IMPRESSUM.md).
+
+## Dokumentations- und Link-System
+
+Seit Version 1.3.0 kann der Skill Todos direkt mit Projektdokumentation verknüpfen und die TODO.html als operativen Einstieg in komplexe Projekt-Wikis verwenden.
+
+**Living Documentation gehört zum Workflow:** TODO führt Aufgaben, Status und
+Priorität; die kanonische Living Documentation führt Entscheidungen, Risiken
+und Testnachweise. Bei relevanten Änderungen wird die Fachseite zuerst
+aktualisiert und das Todo anschließend mit `/todo-link` verknüpft oder
+geschlossen. Ein lokaler Stand, ein Commit, ein GitHub-Push und ein Deployment
+bleiben getrennte Nachweise. Private oder externe Living-Documentation-Quellen
+werden nicht automatisch kopiert oder veröffentlicht.
+
+Neue Befehle:
+
+- `/todo-link <id> <pfad-oder-url> [label]` verknüpft ein Todo mit Spezifikation, Architektur, Rechtsrecherche oder anderen Quellen.
+- `/todo-index` pflegt einen sichtbaren Dokumentationsindex oben in der TODO.html.
+- `/todo-doc-init` legt bei komplexen Projekten optional eine strukturierte WIKI-Basis an.
+- `/todo-archive <titel>` archiviert wichtige Planungs- und Entscheidungsstände datiert, ohne sie mit der aktuellen Spezifikation zu verwechseln.
+
+Das System ist abwärtskompatibel. Bestehende TODO.html-Dateien bleiben gültig. Details stehen in `SKILL.md` und `docs/project-documentation.md`.
+
+<!-- MGD-LEGAL -->
+---
+
+## Lizenz
+
+Dieses Projekt steht unter der [MIT-Lizenz](https://opensource.org/license/mit). Den vollständigen Text enthält die Datei [LICENSE](LICENSE).
+
+## Impressum
+
+**Angaben gemäß § 5 DDG (Digitale-Dienste-Gesetz)**
+
+Michael Gahn DESIGN  
+Michael Gahn  
+Dr.-Theodor-Brugsch Str. 12  
+08529 Plauen  
+Sachsen  
+Deutschland
+
+Tel.: +49 (0) 151 59156639  
+E-Mail: Anfrage@Michael-Gahn.de
+
+Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:  
+Steuernummer: 223/222/02451  
+Ust-ID: DE288143343
+
+Wir sind zur Teilnahme an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle weder verpflichtet noch bereit.
+
+**Redaktionell verantwortlich:**
+
+Michael Gahn DESIGN  
+Michael Gahn  
+Dr.-Theodor-Brugsch Str. 12  
+08529 Plauen  
+Sachsen  
+Deutschland
+
+Tel.: +49 (0) 151 59156639  
+E-Mail: Anfrage@Michael-Gahn.de
+<!-- /MGD-LEGAL -->
