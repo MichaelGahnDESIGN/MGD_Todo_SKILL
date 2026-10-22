@@ -51,6 +51,15 @@ Nach einer Stunde:
    [✓] #1 Datenbankverbindung prüfen
 ```
 
+## Dokumentation synchron halten
+
+Für zusammenhängende Änderungen an der kanonischen Living Documentation,
+TODO.html und dem lokalen Graphify-Index den Agentenbefehl `/todo-doku
+[Thema]` verwenden. Die vollständige Anleitung sowie die Claude-/Codex-
+Befehlsdateien liegen unter [`skills/todo-doku/SKILL.md`](skills/todo-doku/SKILL.md).
+Der Befehl erhält Nutzeränderungen, erfindet keine Entscheidungen und führt
+keine Veröffentlichung oder Live-Änderung aus.
+
 ## Kategorien
 
 Ordne Aufgaben nach Typ:

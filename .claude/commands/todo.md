@@ -104,6 +104,14 @@ Browser: `/todo-edit` (siehe unten) deckt dieselben Felder ab.
 
 ---
 
+## Eigenständiger Dokumentationsbefehl
+
+Für einen zusammenhängenden Abgleich zwischen Living Documentation, TODO.html
+und Graphify `/todo-doku [Thema]` verwenden. Die vollständige Anweisung liegt
+in `skills/todo-doku/SKILL.md`; installierte Kopien sind mit dieser Datei
+synchron zu halten. Sie wird zusätzlich als eigener Claude-/Codex-Befehl unter
+`.claude/commands/todo-doku.md` und `.codex/commands/todo-doku.md` bereitgestellt.
+
 ## Befehle
 
 ### `/todo-setup` — Neues Projekt einrichten (einmalig)
