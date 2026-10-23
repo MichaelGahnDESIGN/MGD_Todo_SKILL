@@ -75,3 +75,14 @@ A: Ja. Die Datei ist normales HTML. Aber `/todo` ist schneller.
 **F: Was passiert mit erledigten Aufgaben?**  
 A: Sie bleiben in der Liste, sind aber markiert. Du kannst sie ausblenden oder löschen.
 
+## Antwort- und Dokumentations-Stil (verbindlich)
+
+- **Einfach schreiben:** so verständlich wie möglich, kurze Sätze, keine unerklärten Fachwörter.
+- **Marker benutzen:**
+  - ❓ Frage an den Nutzer
+  - ⚠️ wichtiger Hinweis
+  - ✅ erledigt
+  - ☑️ noch offen
+  - weitere erlaubt: 🔎 geprüft, 🚫 geht nicht, ➕ neu
+- **READMEs und Wikis für den DAU** (dümmster anzunehmender User) schreiben: Schritt für Schritt, mit Beispiel, ohne Abkürzungen ohne Erklärung.
+- Diese Regeln gelten für alle Texte, die der Skill erzeugt (Doku, TODO, Berichte, Übergaben).
