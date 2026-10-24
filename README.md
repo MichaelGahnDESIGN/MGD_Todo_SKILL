@@ -16,7 +16,7 @@
 Ein universeller Skill für KI-Agenten (Claude Code & ChatGPT Codex), der Projekt-Todos in einer **selbst-gehosteten, sortierbaren und durchsuchbaren `TODO.html`** verwaltet — mit frei anlegbaren Kategorien und Unterkategorien, ohne externe Services, ohne Datenbank, vollständig im eigenen Repo.
 
 > [!NOTE]
-> **👤 FÜR ENTWICKLER** — Aktuell ist **1.2.0**. Neu: `/todo-edit <id>`
+> **👤 FÜR ENTWICKLER** — Der aktuelle Release ist **1.3.0**. Dieser Entwurf ergänzt `/todo-doku [Thema]`, das Living Documentation, TODO und lokalen Graphify-Index zusammenhält. Seit 1.2.0 bearbeitet `/todo-edit <id>`
 > bearbeitet alle Felder eines Todos (Titel, Priorität, Kategorie/
 > Unterkategorie, Status, Notizen, Links) — `/todo-update` deckte davon nur
 > Status/Kategorie/Notizen ab. Dazu bekommt die TODO.html selbst einen
@@ -60,14 +60,24 @@ cp todo/TODO.template.html PROJEKT/TODO/TODO.html
 cp SKILL.md ~/.claude/skills/todo/SKILL.md
 ```
 
-Oder `.claude/commands/todo.md` ins Projekt-Root kopieren (Projekt-lokal).
+Oder die Projektbefehle in ein Zielprojekt kopieren (Pfade relativ zum Root dieses Skill-Repos):
+
+```bash
+mkdir -p PROJEKT/.claude/commands PROJEKT/.agents/skills/todo-doku
+cp .claude/commands/todo.md PROJEKT/.claude/commands/todo.md
+cp skills/todo-doku/SKILL.md PROJEKT/.claude/commands/todo-doku.md
+cp skills/todo-doku/SKILL.md PROJEKT/.agents/skills/todo-doku/SKILL.md
+```
 
 ### 3. Skill installieren (ChatGPT Codex)
 
 ```bash
-cp .codex/commands/todo.md .codex/commands/todo.md
+mkdir -p PROJEKT/.codex/commands PROJEKT/.agents/skills/todo-doku
+cp .codex/commands/todo.md PROJEKT/.codex/commands/todo.md
+cp skills/todo-doku/SKILL.md PROJEKT/.codex/commands/todo-doku.md
+cp skills/todo-doku/SKILL.md PROJEKT/.agents/skills/todo-doku/SKILL.md
 # Im Projekt verwenden:
-codex --instructions .codex/commands/todo.md "/todo"
+codex --instructions PROJEKT/.codex/commands/todo-doku.md "/todo-doku"
 ```
 
 > [!NOTE]
@@ -96,6 +106,7 @@ codex --instructions .codex/commands/todo.md "/todo"
 | `/todo-close <id>` | Markiert ein Todo als erledigt |
 | `/todo-update` | Interaktives Aktualisieren von Status und Notizen |
 | `/todo-edit <id>` | Interaktives Bearbeiten aller Felder: Titel, Priorität, Kategorie/Unterkategorie, Status, Notizen, Links |
+| `/todo-doku [Thema]` | Gleicht Living Documentation, TODO.html und lokalen Graphify-Index in einem sicheren Arbeitsgang ab |
 | `/todo-pfad <pfad>` | Setzt den Pfad zur TODO.html (gespeichert in `.todo-config`) |
 | `/todo-sync` | Importiert neue Todos aus Projekt-Quellen (PlayTest, CODEX-TASKS, …) |
 | `/todo-debug` | Validiert die HTML-Struktur, findet kaputte Einträge |
@@ -352,6 +363,7 @@ werden nicht automatisch kopiert oder veröffentlicht.
 
 Neue Befehle:
 
+- `/todo-doku [Thema]` aktualisiert die kanonische Living Documentation, verknüpft die passende Todo-Aufgabe und baut Graphify gemäß den lokalen Projektregeln neu auf.
 - `/todo-link <id> <pfad-oder-url> [label]` verknüpft ein Todo mit Spezifikation, Architektur, Rechtsrecherche oder anderen Quellen.
 - `/todo-index` pflegt einen sichtbaren Dokumentationsindex oben in der TODO.html.
 - `/todo-doc-init` legt bei komplexen Projekten optional eine strukturierte WIKI-Basis an.
@@ -361,7 +373,7 @@ Neue Befehle:
   Anleitung steht in [docs/wissen.md](docs/wissen.md); der vollständige Skill
   liegt unter [skills/wissen/SKILL.md](skills/wissen/SKILL.md).
 
-Das System ist abwärtskompatibel. Bestehende TODO.html-Dateien bleiben gültig. Details stehen in `SKILL.md` und `docs/project-documentation.md`.
+Das System ist abwärtskompatibel. Bestehende TODO.html-Dateien bleiben gültig. Der eigenständige Agentenbefehl liegt in [`skills/todo-doku/SKILL.md`](skills/todo-doku/SKILL.md); Claude- und Codex-Befehlsdateien sind mit dieser Quelle abzugleichen. Details stehen außerdem in `SKILL.md` und `docs/project-documentation.md`.
 
 <!-- MGD-LEGAL -->
 ---

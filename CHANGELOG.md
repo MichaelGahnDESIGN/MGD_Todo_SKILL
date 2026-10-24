@@ -20,6 +20,12 @@
 
 ### Neu
 
+- **`/todo-doku [Thema]`** synchronisiert bei relevanten Änderungen die
+  kanonische Living Documentation, passende Todo-Verknüpfungen und den lokalen
+  Graphify-Index. Quellenstatus, vorhandene Änderungen und Projekt-Schutzregeln
+  werden zuerst geprüft; Commits, Pushes und Deployments erfolgen nicht
+  automatisch. Enthaltene Agentenanweisungen für Claude Code und Codex stehen in
+  `skills/todo-doku/SKILL.md`.
 - **`/todo-edit <id>`.** Bearbeitet alle Felder eines Todos: Titel, Priorität,
   Kategorie/Unterkategorie, Status (inkl. korrektem Setzen/Entfernen von
   `data-erledigt` und `row-done` je nach Richtung des Statuswechsels),
