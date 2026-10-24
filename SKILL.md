@@ -86,3 +86,12 @@ A: Sie bleiben in der Liste, sind aber markiert. Du kannst sie ausblenden oder l
   - weitere erlaubt: 🔎 geprüft, 🚫 geht nicht, ➕ neu
 - **READMEs und Wikis für den DAU** (dümmster anzunehmender User) schreiben: Schritt für Schritt, mit Beispiel, ohne Abkürzungen ohne Erklärung.
 - Diese Regeln gelten für alle Texte, die der Skill erzeugt (Doku, TODO, Berichte, Übergaben).
+
+## Abgestimmte Wissenspflege mit `/wissen`
+
+Nach einem zusammenhängenden Arbeitsblock kann `/wissen` die wirklich
+betroffenen Aufgaben, die vorhandene Graphify-Karte und die Living
+Documentation aufeinander abstimmen. `/todo` bleibt dabei für konkrete Arbeit
+zuständig; Entscheidungen, Risiken und Testnachweise bleiben in der Living
+Documentation. Der Begleit-Skill liegt unter `skills/wissen/SKILL.md` und ist
+auch als `/wissen` für Codex und Claude vorbereitet.

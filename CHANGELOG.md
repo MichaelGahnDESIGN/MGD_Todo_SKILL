@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Neu
+
+- **`/wissen` als gemeinsamer Begleit-Skill.** Der neue lokale Skill stimmt
+  nach einem Arbeitsblock TODO, vorhandene Graphify-Karte und Living
+  Documentation ab, ohne daraus eine zweite Wissensablage zu machen. Codex-
+  und Claude-Befehl, Einsteiger-Dokumentation und README sind enthalten. Die
+  identische Skill-Fassung wird mit MGD Living Documentation gepflegt.
+
 ### Geändert
 
 - **Living Documentation ist jetzt ausdrücklich Teil des öffentlichen

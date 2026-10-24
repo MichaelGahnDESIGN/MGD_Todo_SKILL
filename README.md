@@ -356,6 +356,10 @@ Neue Befehle:
 - `/todo-index` pflegt einen sichtbaren Dokumentationsindex oben in der TODO.html.
 - `/todo-doc-init` legt bei komplexen Projekten optional eine strukturierte WIKI-Basis an.
 - `/todo-archive <titel>` archiviert wichtige Planungs- und Entscheidungsstände datiert, ohne sie mit der aktuellen Spezifikation zu verwechseln.
+- `/wissen` aktualisiert nach einem Arbeitsblock nur die wirklich betroffenen
+  TODOs, die vorhandene Graphify-Karte und die Living Documentation. Die
+  Anleitung steht in [docs/wissen.md](docs/wissen.md); der vollständige Skill
+  liegt unter [skills/wissen/SKILL.md](skills/wissen/SKILL.md).
 
 Das System ist abwärtskompatibel. Bestehende TODO.html-Dateien bleiben gültig. Details stehen in `SKILL.md` und `docs/project-documentation.md`.
 
