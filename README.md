@@ -360,6 +360,10 @@ Neue Befehle:
   TODOs, die vorhandene Graphify-Karte und die Living Documentation. Die
   Anleitung steht in [docs/wissen.md](docs/wissen.md); der vollständige Skill
   liegt unter [skills/wissen/SKILL.md](skills/wissen/SKILL.md).
+- `/wissen-ansehen` öffnet die vorhandene Dokumentation des aktuellen
+  Projekts, ohne Dateien zu verändern. HTML wird bevorzugt, Markdown bleibt
+  als Rückfall verfügbar. Anleitung und Installation:
+  [docs/wissen.md](docs/wissen.md#dokumentation-ansehen).
 
 Das System ist abwärtskompatibel. Bestehende TODO.html-Dateien bleiben gültig. Details stehen in `SKILL.md` und `docs/project-documentation.md`.
 

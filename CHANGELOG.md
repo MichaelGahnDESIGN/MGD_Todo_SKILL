@@ -4,6 +4,13 @@
 
 ### Neu
 
+- `/wissen-ansehen` öffnet vorhandene Projektdokumentation ohne Änderungen.
+  Enthalten sind der nur lesende Pfadfinder, Codex-/Claude-Befehle und
+  Tests für Auswahl, fehlende Quellen und Projektgrenzen. `/wissen` 1.2.0
+  verweist auf diesen getrennten Anzeigebefehl.
+
+### Neu
+
 - **`/wissen` als gemeinsamer Begleit-Skill.** Der neue lokale Skill stimmt
   nach einem Arbeitsblock TODO, vorhandene Graphify-Karte und Living
   Documentation ab, ohne daraus eine zweite Wissensablage zu machen. Codex-

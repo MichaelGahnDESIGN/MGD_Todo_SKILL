@@ -3,9 +3,10 @@ name: wissen
 description: >-
   Aktualisiert den nachweisbaren Wissensstand eines Projekts abgestimmt in
   TODO, Graphify und Living Documentation. Für /wissen, Wissenspflege nach
-  Änderungen sowie verständliche README- und Wiki-Updates.
+  Änderungen sowie verständliche README- und Wiki-Updates. Zum bloßen
+  Anzeigen vorhandener Dokumentation dient /wissen-ansehen.
 metadata:
-  version: 1.1.0
+  version: 1.2.0
   integration:
     - todo
     - graphify
@@ -18,6 +19,15 @@ metadata:
 auf. Es erzeugt keine zweite Dokumentation und aktualisiert nicht blind alle
 Repositories. Der Auftrag lautet: Was ist getan, was ist offen und wo steht die
 verlässliche Erklärung dazu?
+
+## Dokumentation nur ansehen
+
+Mit `/wissen-ansehen` die vorhandene Projektdokumentation öffnen, ohne sie
+zu verändern. Dafür den eigenständigen Begleit-Skill
+[`wissen-ansehen`](../wissen-ansehen/SKILL.md) verwenden. Er bevorzugt den
+vorhandenen HTML-Einstieg und bietet Markdown als Rückfall an. Fehlt eine
+Dokumentation, meldet er dies; er startet weder einen Build noch `/wissen`
+oder eine Veröffentlichung automatisch.
 
 ## Die drei Orte haben verschiedene Aufgaben
 
