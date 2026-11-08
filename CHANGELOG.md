@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+## 1.4.0 — 2026-11-08
+
+### Neu
+
+- `/wissen-ansehen` öffnet vorhandene Projektdokumentation ohne Änderungen.
+  Enthalten sind der nur lesende Pfadfinder, Codex-/Claude-Befehle und
+  Tests für Auswahl, fehlende Quellen und Projektgrenzen. `/wissen` 1.2.0
+  verweist auf diesen getrennten Anzeigebefehl.
+
+### Neu
+
+- **`/wissen` als gemeinsamer Begleit-Skill.** Der neue lokale Skill stimmt
+  nach einem Arbeitsblock TODO, vorhandene Graphify-Karte und Living
+  Documentation ab, ohne daraus eine zweite Wissensablage zu machen. Codex-
+  und Claude-Befehl, Einsteiger-Dokumentation und README sind enthalten. Die
+  identische Skill-Fassung wird mit MGD Living Documentation gepflegt.
+
 ### Geändert
 
 - **Living Documentation ist jetzt ausdrücklich Teil des öffentlichen
@@ -18,6 +35,19 @@
   werden zuerst geprüft; Commits, Pushes und Deployments erfolgen nicht
   automatisch. Enthaltene Agentenanweisungen für Claude Code und Codex stehen in
   `skills/todo-doku/SKILL.md`.
+
+### Behoben
+
+- Die Codex-Installation verwendet `.agents/skills/` und den Skill-Aufruf
+  `$todo-doku`; der nicht unterstützte CLI-Schalter `--instructions` entfällt
+  aus der neuen Installationsanleitung. Claude- und Codex-Befehlsdateien
+  bleiben mit der kanonischen `skills/todo-doku/SKILL.md` identisch.
+
+### Bereits mit v1.3.0 veröffentlicht
+
+Die folgenden Funktionen waren im v1.3.0-Paket enthalten; ihre frühere
+Einordnung unter „Unreleased“ war historisch ungenau.
+
 - **`/todo-edit <id>`.** Bearbeitet alle Felder eines Todos: Titel, Priorität,
   Kategorie/Unterkategorie, Status (inkl. korrektem Setzen/Entfernen von
   `data-erledigt` und `row-done` je nach Richtung des Statuswechsels),
