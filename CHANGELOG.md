@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.4.0 — 2026-11-08
+
 ### Neu
 
 - `/wissen-ansehen` öffnet vorhandene Projektdokumentation ohne Änderungen.
@@ -26,6 +28,25 @@
   Commit, GitHub-Push und Deployment als getrennte Nachweise fest.
 
 ### Neu
+
+- **`/todo-doku [Thema]`** synchronisiert bei relevanten Änderungen die
+  kanonische Living Documentation, passende Todo-Verknüpfungen und den lokalen
+  Graphify-Index. Quellenstatus, vorhandene Änderungen und Projekt-Schutzregeln
+  werden zuerst geprüft; Commits, Pushes und Deployments erfolgen nicht
+  automatisch. Enthaltene Agentenanweisungen für Claude Code und Codex stehen in
+  `skills/todo-doku/SKILL.md`.
+
+### Behoben
+
+- Die Codex-Installation verwendet `.agents/skills/` und den Skill-Aufruf
+  `$todo-doku`; der nicht unterstützte CLI-Schalter `--instructions` entfällt
+  aus der neuen Installationsanleitung. Claude- und Codex-Befehlsdateien
+  bleiben mit der kanonischen `skills/todo-doku/SKILL.md` identisch.
+
+### Bereits mit v1.3.0 veröffentlicht
+
+Die folgenden Funktionen waren im v1.3.0-Paket enthalten; ihre frühere
+Einordnung unter „Unreleased“ war historisch ungenau.
 
 - **`/todo-edit <id>`.** Bearbeitet alle Felder eines Todos: Titel, Priorität,
   Kategorie/Unterkategorie, Status (inkl. korrektem Setzen/Entfernen von

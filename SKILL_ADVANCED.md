@@ -87,6 +87,17 @@ schaltet es für sich selbst um.
 
 ---
 
+## Living Documentation, TODO und Graphify gemeinsam pflegen
+
+Wenn ein Befund oder eine Entscheidung mehrere Dokumentationsstellen betrifft,
+`/todo-doku [Thema]` verwenden. Der eigenständige Agentenbefehl in
+[`skills/todo-doku/SKILL.md`](skills/todo-doku/SKILL.md) beschreibt Reihenfolge,
+Quellenprüfung, Todo-Verknüpfung, lokalen Graphify-Neuaufbau und Sicherheits-
+grenzen. Die kanonische Fachseite bleibt maßgeblich; README und Todo verweisen
+auf sie, statt denselben Inhalt als zweite Wahrheit zu duplizieren.
+
+---
+
 ## Befehle
 
 ### `/todo-setup` — Neues Projekt einrichten (einmalig)

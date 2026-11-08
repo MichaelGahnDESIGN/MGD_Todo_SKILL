@@ -1,6 +1,6 @@
 # Projektdokumentation mit dem TODO-Skill
 
-Stand: 20.09.2026
+Stand: 08.11.2026
 
 Der TODO-Skill kann bei kleinen Projekten weiterhin nur eine TODO.html verwalten. Bei komplexen Projekten darf er zusätzlich als Navigationsschicht zwischen Aufgaben und Dokumentation dienen.
 
@@ -93,3 +93,39 @@ und anschließend das Todo verlinkt oder geschlossen. Ein lokaler Stand, ein
 Git-Commit, ein GitHub-Push und ein Deployment bleiben getrennte Nachweise.
 Private oder externe Living-Documentation-Speicherorte werden dabei nicht
 automatisch in ein Repository kopiert oder veröffentlicht.
+
+## Zusammenhängender Abgleich mit `/todo-doku`
+
+`/todo-doku [Thema]` bündelt diesen Ablauf in einem eigenen Agentenbefehl:
+Projektregeln und vorhandene Änderungen lesen, die zuständige Fachseite
+aktualisieren, die passende Todo-ID abgleichen und den vorhandenen lokalen
+Graphify-Befehl ausführen. Die vollständige Anweisung liegt in
+[`skills/todo-doku/SKILL.md`](../skills/todo-doku/SKILL.md).
+
+Der Befehl erzeugt keine zweite Wissensablage und macht eine Aufgabe erst
+bei einem belegten Ergebnis erledigt. Secrets, private Backups und vom
+Projekt geschützte Ordner bleiben ausgeschlossen. Commit, Push,
+Wikiveröffentlichung und Deployment benötigen einen gesonderten Auftrag.
+
+### Playbook und Rückweg für die Integration vom 08.11.2026
+
+Ziel: PR #2 auf den aktuellen Hauptbranch übernehmen und als v1.4.0 nutzbar
+veröffentlichen. Erst die Claude-/Codex-Dateien mit dem kanonischen Skill
+vergleichen und die dokumentierte Installation in einem leeren Testprojekt
+prüfen. Danach PR mergen, nur versionierte Veröffentlichungsdateien als ZIP
+packen und den Download per SHA-256 gegen das lokale Paket prüfen.
+
+Der vorhandene Stand vor der Integration ist Commit
+`9869a1d2ad5c883d2e72d3207c25d690d9cade4c`. Bei Problemen den
+Integrationscommit gezielt zurücknehmen und die zuvor installierte
+Skill-Fassung weiterverwenden; keine fremden Projektdateien überschreiben.
+Für diese Anweisungs- und Dokumentationsänderung sind keine produktiven
+Daten betroffen und kein Website- oder Datenbank-Backup nötig.
+
+Geprüft: kanonischer Skill, Claude- und Codex-Befehl sind bytegleich. Die
+projektlokale Installation wurde in einem leeren temporären Zielordner mit
+Leerzeichen geprüft; die vier Doku-Einstiege und ihre lokalen Skill-Links
+sind vorhanden. Alle neun vorhandenen Pfadfinder-Tests sowie
+`git diff --check` bestanden. Ein echter KI-Agentenlauf wurde dafür nicht
+gestartet; sein Ergebnis hängt weiterhin von Projektregeln und verfügbaren
+Werkzeugen des Zielprojekts ab.
