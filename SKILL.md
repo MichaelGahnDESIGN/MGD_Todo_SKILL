@@ -105,7 +105,7 @@ zuständig; Entscheidungen, Risiken und Testnachweise bleiben in der Living
 Documentation. Der Begleit-Skill liegt unter `skills/wissen/SKILL.md` und ist
 auch als `/wissen` für Codex und Claude vorbereitet.
 
-## Weitere Befehle in diesem Skill (ab 1.5.0)
+## Weitere Befehle in diesem Skill (ab 1.6.0)
 
 | Befehl | Macht | Skill |
 |---|---|---|
