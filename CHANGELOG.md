@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## 1.5.0 — 2026-11-24
+
+### Neu
+
+- `/board`: Message-Board und Dashboard (`skills/board`, `docs/board.md`) mit Phasen, Thread-Ampeln, Suche, offenen Fragen und letzten Nachrichten. Nur lesend, ohne Fremdbibliothek, mit Tests.
+- `/fragenkatalog` aus dem bisherigen Repo `Fragenkatalog-Skill` übernommen (Skill, Vorlage, Anleitungen unter `docs/fragenkatalog/`).
+- `/prozesse` aus dem bisherigen Repo `MGD_Prozesse_SKILL` übernommen.
+- Claude- und Codex-Befehle für `board`, `fragenkatalog`, `prozesse`.
+
 ## 1.4.0 — 2026-11-08
 
 ### Neu

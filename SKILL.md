@@ -104,3 +104,14 @@ Documentation aufeinander abstimmen. `/todo` bleibt dabei für konkrete Arbeit
 zuständig; Entscheidungen, Risiken und Testnachweise bleiben in der Living
 Documentation. Der Begleit-Skill liegt unter `skills/wissen/SKILL.md` und ist
 auch als `/wissen` für Codex und Claude vorbereitet.
+
+## Weitere Befehle in diesem Skill (ab 1.5.0)
+
+| Befehl | Macht | Skill |
+|---|---|---|
+| `/board` | Message-Board und Dashboard der Threads erzeugen und öffnen | `skills/board/SKILL.md` |
+| `/fragenkatalog` | Fragenkatalog als HTML erstellen, beantworten, exportieren | `skills/fragenkatalog/SKILL.md` |
+| `/prozesse` | Hintergrundprozesse prüfen und aufräumen | `skills/prozesse/SKILL.md` |
+| `/wissen`, `/wissen-ansehen`, `/todo-doku` | Wissenspflege und Dokumentation | `skills/wissen*/`, `skills/todo-doku/` |
+
+Diese Befehle laufen unabhängig von `/todo`, gehören aber zum selben Werkzeugkasten.
