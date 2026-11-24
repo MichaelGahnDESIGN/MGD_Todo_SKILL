@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 1.6.1 — 2026-11-24
+
+### Neu
+
+- Dashboard interaktiv: Phasen, Threads, Fragen und Hinweise sind aufklappbar. Fragen zeigen den Thread, aus dem sie kommen, lassen sich kopieren und direkt beantworten (Antwort wird im Browser gespeichert, "Antwort kopieren" und "Alle beantworteten kopieren"). Links im Text sind klickbar, Thread-Karten haben "Thread öffnen" und die letzten Nachrichten. "Alles aufklappen/zuklappen". Neue Felder in `dashboard-status.json`: `von`, `detail`, `link` (Fragen, Hinweise), `session` (Threads), `detail` (Phasen).
+
 ## 1.6.0 — 2026-11-24
 
 ### Neu
