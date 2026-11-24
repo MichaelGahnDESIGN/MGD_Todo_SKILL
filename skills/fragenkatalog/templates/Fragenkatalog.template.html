@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fragenkatalog</title>
+<style>
+  :root{
+    --bg:#14161c;
+    --bg-elevated:#1b1e26;
+    --bg-card:#20232d;
+    --border:#2e3240;
+    --text:#e8e9ee;
+    --text-dim:#9aa0b0;
+    --gold:#d4af37;
+    --gold-dim:#8a7328;
+    --blue:#4da3ff;
+    --red:#ff6b6b;
+    --green:#6bcf8f;
+    --amber:#e8a944;
+    --radius:8px;
+    --shadow:0 4px 18px rgba(0,0,0,.35);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    padding:24px;
+  }
+  h1{
+    font-size:1.6rem;
+    margin:0 0 4px 0;
+    color:var(--gold);
+    letter-spacing:.02em;
+  }
+  .subtitle{
+    color:var(--text-dim);
+    font-size:.9rem;
+    margin-bottom:20px;
+  }
+  .toolbar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-bottom:18px;
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:12px;
+  }
+  .toolbar input[type="search"]{
+    flex:1 1 220px;
+    min-width:180px;
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:8px 10px;
+    border-radius:6px;
+    font-size:.9rem;
+  }
+  .toolbar select{
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:8px 10px;
+    border-radius:6px;
+    font-size:.9rem;
+  }
+  button{
+    cursor:pointer;
+    border:1px solid var(--border);
+    background:var(--bg-card);
+    color:var(--text);
+    padding:8px 14px;
+    border-radius:6px;
+    font-size:.85rem;
+    transition:background .15s,border-color .15s;
+  }
+  button:hover{ background:#262a35; border-color:var(--gold-dim); }
+  button.primary{ background:var(--gold-dim); border-color:var(--gold); color:#1b1e26; font-weight:600; }
+  button.primary:hover{ background:var(--gold); }
+  button.danger{ border-color:var(--red); color:var(--red); }
+  button.danger:hover{ background:rgba(255,107,107,.12); }
+  #editModeBtn.active{ background:var(--gold); color:#1b1e26; border-color:var(--gold); font-weight:600; }
+
+  .stats{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+    margin-bottom:16px;
+    font-size:.82rem;
+    color:var(--text-dim);
+  }
+  .stats b{ color:var(--gold); }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+  }
+  thead th{
+    text-align:left;
+    background:var(--bg-card);
+    color:var(--gold);
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  tbody td{
+    padding:10px 12px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+    font-size:.88rem;
+    line-height:1.4;
+  }
+  tbody tr:hover{ background:rgba(255,255,255,.02); }
+  td.col-category{ color:var(--text-dim); white-space:nowrap; font-size:.8rem; }
+  td.col-question{ color:var(--red); font-weight:500; max-width:320px; }
+  td.col-ki{ color:var(--blue); max-width:360px; white-space:pre-wrap; }
+  td.col-user{ color:var(--text); max-width:320px; white-space:pre-wrap; }
+  tr.legal-row td.col-ki{ color:var(--amber); }
+  td.col-category-legal{ color:var(--amber); font-weight:600; }
+  td.col-actions{ white-space:nowrap; }
+  td.col-actions button{ padding:4px 8px; font-size:.75rem; margin-right:4px; }
+  .hidden{ display:none !important; }
+  .empty-row td{ text-align:center; color:var(--text-dim); padding:30px; }
+
+  .toast{ position:fixed; left:50%; bottom:24px; transform:translateX(-50%); max-width:min(640px,92vw);
+    background:var(--bg-elevated); color:var(--text); border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:var(--shadow); padding:12px 16px; z-index:2000; font-size:.92rem; }
+  .toast.warn{ border-color:#d97706; }
+  .notice{ margin:12px 20px; padding:10px 14px; border:1px solid #d97706; border-radius:var(--radius); font-size:.9rem; }
+  .transfer textarea{ width:100%; min-height:220px; font-family:ui-monospace,Menlo,Consolas,monospace; font-size:.8rem; }
+  .modal-overlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,.6);
+    display:flex; align-items:center; justify-content:center;
+    z-index:1000;
+    padding:20px;
+  }
+  .modal{
+    background:var(--bg-elevated);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    width:100%;
+    max-width:560px;
+    max-height:90vh;
+    overflow-y:auto;
+    padding:20px;
+  }
+  .modal h2{ margin-top:0; color:var(--gold); font-size:1.1rem; }
+  .field{ margin-bottom:14px; }
+  .field label{
+    display:block;
+    font-size:.78rem;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--text-dim);
+    margin-bottom:6px;
+  }
+  .field input[type="text"],
+  .field select,
+  .field textarea{
+    width:100%;
+    background:var(--bg-card);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:8px 10px;
+    border-radius:6px;
+    font-size:.88rem;
+    font-family:inherit;
+    resize:vertical;
+  }
+  .field textarea{ min-height:70px; }
+  .modal-actions{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-top:18px;
+  }
+  .modal-actions .right{ display:flex; gap:10px; }
+
+  #importFileInput{ display:none; }
+
+  footer{
+    margin-top:20px;
+    color:var(--text-dim);
+    font-size:.75rem;
+    text-align:center;
+  }
+
+  @media (max-width:700px){
+    table, thead, tbody, tr, th, td{ display:block; }
+    thead{ display:none; }
+    tbody tr{
+      border:1px solid var(--border);
+      border-radius:6px;
+      margin-bottom:10px;
+      padding:8px;
+    }
+    tbody td{ border:none; padding:6px 4px; }
+    td.col-question::before{ content:"Frage: "; color:var(--text-dim); }
+    td.col-ki::before{ content:"KI-Antwort: "; color:var(--text-dim); }
+    td.col-user::before{ content:"Eigene Antwort: "; color:var(--text-dim); }
+    td.col-category::before{ content:"Kategorie: "; color:var(--text-dim); }
+  }
+</style>
+</head>
+<body>
+
+<h1>Fragenkatalog</h1>
+<div class="subtitle">Selbstständige, offline nutzbare Frage/Antwort-Übersicht für dein Projekt. Erzeugt vom Fragenkatalog-Skill.</div>
+
+<div class="toolbar">
+  <select id="categoryFilter" title="Nach Kategorie filtern"></select>
+  <input type="search" id="searchInput" placeholder="Fragen durchsuchen ..." title="Volltextsuche">
+  <button id="editModeBtn" title="Bearbeiten ein/aus">&#9998; Bearbeiten</button>
+  <button id="addRowBtn" class="hidden">+ Neue Frage</button>
+  <button id="exportBtn">&#8595; Export (JSON)</button>
+  <button id="importBtn">&#8593; Import (JSON)</button>
+  <input type="file" id="importFileInput" accept="application/json">
+</div>
+
+<div class="stats" id="statsBar"></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Kategorie</th>
+      <th>Frage</th>
+      <th>KI-Antwort</th>
+      <th>Eigene Antwort</th>
+      <th class="editOnlyHeader hidden">Aktionen</th>
+    </tr>
+  </thead>
+  <tbody id="tableBody"></tbody>
+</table>
+
+<footer>Fragenkatalog-Skill &middot; self-contained HTML, keine externen Abhängigkeiten &middot; Daten liegen lokal in dieser Datei + Browser-localStorage (wenn verfügbar), Sicherung über Export</footer>
+
+<div class="notice hidden" id="storageNotice" role="status">Speichern im Browser ist hier nicht verfügbar (z. B. in einer abgeschotteten Vorschau). Änderungen gehen beim Schließen verloren. Bitte regelmäßig „Export (JSON)" nutzen.</div>
+
+<!-- Bestätigungsdialog (ersetzt confirm(), das in abgeschotteten Umgebungen blockiert ist) -->
+<div class="modal-overlay hidden" id="confirmOverlay">
+  <div class="modal" role="alertdialog" aria-labelledby="confirmText">
+    <p id="confirmText"></p>
+    <div class="modal-actions"><div class="right">
+      <button id="confirmNo">Abbrechen</button>
+      <button class="primary" id="confirmYes">OK</button>
+    </div></div>
+  </div>
+</div>
+
+<!-- Export/Import-Fenster: funktioniert auch, wenn Downloads oder Dateiauswahl blockiert sind -->
+<div class="modal-overlay hidden" id="transferOverlay">
+  <div class="modal transfer" role="dialog" aria-labelledby="transferTitle">
+    <h2 id="transferTitle">Export / Import</h2>
+    <p id="transferHint" class="hint"></p>
+    <textarea id="transferText" spellcheck="false" aria-label="Fragenkatalog als JSON"></textarea>
+    <div class="modal-actions">
+      <div>
+        <button id="transferDownload">Als Datei speichern</button>
+        <button id="transferCopy">Kopieren</button>
+      </div>
+      <div class="right">
+        <button id="transferReplace">Import: Ersetzen</button>
+        <button id="transferAppend">Import: Anhängen</button>
+        <button class="primary" id="transferClose">Schließen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit/Add Modal -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal">
+    <h2 id="modalTitle">Frage bearbeiten</h2>
+    <div class="field">
+      <label for="modalCategory">Kategorie</label>
+      <select id="modalCategory"></select>
+    </div>
+    <div class="field">
+      <label for="modalQuestion">Frage</label>
+      <textarea id="modalQuestion"></textarea>
+    </div>
+    <div class="field">
+      <label for="modalKiAnswer">KI-Antwort</label>
+      <textarea id="modalKiAnswer"></textarea>
+    </div>
+    <div class="field">
+      <label for="modalUserAnswer">Eigene Antwort</label>
+      <textarea id="modalUserAnswer"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="danger hidden" id="deleteBtn">Löschen</button>
+      <div class="right">
+        <button id="cancelBtn">Abbrechen</button>
+        <button class="primary" id="saveBtn">Speichern</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------------------------------------------------------------------
+  // Datenmodell: Array von { id, category, question, kiAnswer, userAnswer }
+  // Wird vom Fragenkatalog-Skill beim Export befüllt. Leer im Template.
+  // ---------------------------------------------------------------------
+  const COMPLETE_DATA = [];
+
+  const STORAGE_KEY = "fragenkatalog_data_v1";
+  const KI_PREFIX = "💙 "; // 💙 als Default-Präfix, im Skill konfigurierbar
+
+  // -- Rechts-Kategorie: eigenes Präfix + Pflicht-Disclaimer -----------
+  // Kategorien, deren Name (case-insensitive) einem dieser Werte entspricht,
+  // gelten als "Rechtliches" und bekommen automatisch das Waagen-Präfix und
+  // den Disclaimer angehängt statt des normalen Experten-Präfixes.
+  const LEGAL_CATEGORY_NAMES = ["recht", "rechtliches", "rechtsfragen"];
+  const LEGAL_PREFIX = "⚖️ "; // ⚖️
+  const LEGAL_DISCLAIMER = "Hinweis: Dies ist keine Rechtsberatung, sondern eine allgemeine Orientierung zur Recherche. Für verbindliche Aussagen einen Anwalt/Fachberater für das jeweilige Rechtsgebiet und Land konsultieren.";
+
+  function isLegalCategory(category){
+    return LEGAL_CATEGORY_NAMES.indexOf((category || "").trim().toLowerCase()) !== -1;
+  }
+
+  function formatKiAnswer(row){
+    const raw = row.kiAnswer || "";
+    if(!raw) return "";
+    if(isLegalCategory(row.category)){
+      const hasDisclaimer = raw.indexOf(LEGAL_DISCLAIMER) !== -1;
+      return LEGAL_PREFIX + raw + (hasDisclaimer ? "" : "\n\n" + LEGAL_DISCLAIMER);
+    }
+    return KI_PREFIX + raw;
+  }
+
+  let state = {
+    data: [],
+    editMode: false,
+    filterCategory: "",
+    searchText: "",
+    editingId: null // null = neuer Eintrag im Modal
+  };
+
+  // -- Persistenz -----------------------------------------------------
+
+  function loadData(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        const parsed = JSON.parse(raw);
+        if(Array.isArray(parsed) && parsed.length > 0){
+          return parsed;
+        }
+      }
+    }catch(e){
+      console.warn("Fragenkatalog: localStorage konnte nicht gelesen werden.", e);
+    }
+    // Deep copy, damit COMPLETE_DATA nie mutiert wird
+    return COMPLETE_DATA.map(function(row){ return Object.assign({}, row); });
+  }
+
+  function persist(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
+      document.getElementById("storageNotice").classList.add("hidden");
+      return true;
+    }catch(e){
+      console.warn("Fragenkatalog: localStorage konnte nicht geschrieben werden.", e);
+      document.getElementById("storageNotice").classList.remove("hidden");
+      return false;
+    }
+  }
+
+  // -- Hinweise und Bestätigung ohne alert()/confirm() (in Sandboxes blockiert) --
+
+  let toastTimer = null;
+  function notify(msg, warn){
+    let t = document.getElementById("toast");
+    if(!t){
+      t = document.createElement("div");
+      t.id = "toast"; t.setAttribute("role", "status");
+      document.body.appendChild(t);
+    }
+    t.className = "toast" + (warn ? " warn" : "");
+    t.textContent = msg;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.remove(); }, 5000);
+  }
+
+  let confirmYesCb = null;
+  function askConfirm(msg, onYes){
+    document.getElementById("confirmText").textContent = msg;
+    confirmYesCb = onYes;
+    document.getElementById("confirmOverlay").classList.remove("hidden");
+    document.getElementById("confirmYes").focus();
+  }
+  function closeConfirm(){
+    document.getElementById("confirmOverlay").classList.add("hidden");
+    confirmYesCb = null;
+  }
+
+  function nextId(){
+    let max = 0;
+    state.data.forEach(function(row){
+      if(typeof row.id === "number" && row.id > max) max = row.id;
+    });
+    return max + 1;
+  }
+
+  // -- XSS-Schutz -------------------------------------------------------
+
+  function escapeHtml(str){
+    if(str === null || str === undefined) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  // -- Kategorien ---------------------------------------------------------
+
+  function getCategories(){
+    const set = new Set();
+    state.data.forEach(function(row){ set.add(row.category || "Sonstiges"); });
+    return Array.from(set).sort(function(a,b){ return a.localeCompare(b, "de"); });
+  }
+
+  function renderCategoryFilter(){
+    const select = document.getElementById("categoryFilter");
+    const categories = getCategories();
+    const counts = {};
+    state.data.forEach(function(row){
+      const c = row.category || "Sonstiges";
+      counts[c] = (counts[c] || 0) + 1;
+    });
+    let html = '<option value="">Alle Kategorien (' + state.data.length + ')</option>';
+    categories.forEach(function(cat){
+      const label = (isLegalCategory(cat) ? LEGAL_PREFIX : "") + cat;
+      html += '<option value="' + escapeHtml(cat) + '">' + escapeHtml(label) + ' (' + counts[cat] + ')</option>';
+    });
+    select.innerHTML = html;
+    select.value = state.filterCategory;
+  }
+
+  function renderModalCategoryOptions(selected){
+    const select = document.getElementById("modalCategory");
+    const categories = getCategories();
+    if(categories.length === 0) categories.push("Sonstiges");
+    let html = "";
+    categories.forEach(function(cat){
+      html += '<option value="' + escapeHtml(cat) + '">' + escapeHtml(cat) + '</option>';
+    });
+    select.innerHTML = html;
+    if(selected && !categories.includes(selected)){
+      const opt = document.createElement("option");
+      opt.value = selected;
+      opt.textContent = selected;
+      select.appendChild(opt);
+    }
+    select.value = selected || categories[0];
+  }
+
+  // -- Tabelle rendern ------------------------------------------------
+
+  function filterRows(){
+    const search = state.searchText.trim().toLowerCase();
+    return state.data.filter(function(row){
+      if(state.filterCategory && (row.category || "Sonstiges") !== state.filterCategory) return false;
+      if(!search) return true;
+      const haystack = [row.question, row.kiAnswer, row.userAnswer, row.category]
+        .map(function(v){ return (v || "").toLowerCase(); })
+        .join(" ");
+      return haystack.indexOf(search) !== -1;
+    });
+  }
+
+  function renderTable(){
+    const tbody = document.getElementById("tableBody");
+    const rows = filterRows();
+
+    if(rows.length === 0){
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="5">Keine Fragen gefunden.</td></tr>';
+      renderStats();
+      return;
+    }
+
+    let html = "";
+    rows.forEach(function(row){
+      const kiText = formatKiAnswer(row);
+      const legal = isLegalCategory(row.category);
+      const categoryLabel = (legal ? LEGAL_PREFIX : "") + (row.category || "Sonstiges");
+      html += "<tr data-id=\"" + row.id + "\"" + (legal ? ' class="legal-row"' : "") + ">";
+      html += '<td class="col-category' + (legal ? " col-category-legal" : "") + '">' + escapeHtml(categoryLabel) + "</td>";
+      html += '<td class="col-question">' + escapeHtml(row.question) + "</td>";
+      html += '<td class="col-ki">' + escapeHtml(kiText) + "</td>";
+      html += '<td class="col-user">' + escapeHtml(row.userAnswer || "") + "</td>";
+      html += '<td class="col-actions' + (state.editMode ? "" : " hidden") + '">';
+      html += '<button data-action="edit" data-id="' + row.id + '">Bearbeiten</button>';
+      html += "</td>";
+      html += "</tr>";
+    });
+    tbody.innerHTML = html;
+
+    tbody.querySelectorAll('button[data-action="edit"]').forEach(function(btn){
+      btn.addEventListener("click", function(){
+        openEditModal(parseInt(btn.getAttribute("data-id"), 10));
+      });
+    });
+
+    renderStats();
+  }
+
+  function renderStats(){
+    const bar = document.getElementById("statsBar");
+    const total = state.data.length;
+    const answered = state.data.filter(function(r){ return (r.userAnswer || "").trim().length > 0; }).length;
+    const open = total - answered;
+    const shown = filterRows().length;
+    bar.innerHTML =
+      "Gesamt: <b>" + total + "</b> &middot; " +
+      "Eigene Antworten vorhanden: <b>" + answered + "</b> &middot; " +
+      "Noch offen: <b>" + open + "</b> &middot; " +
+      "Angezeigt: <b>" + shown + "</b>";
+  }
+
+  function filterTable(){
+    state.filterCategory = document.getElementById("categoryFilter").value;
+    state.searchText = document.getElementById("searchInput").value;
+    renderTable();
+  }
+
+  // -- Edit-Modus ------------------------------------------------------
+
+  function toggleEditMode(){
+    state.editMode = !state.editMode;
+    const btn = document.getElementById("editModeBtn");
+    btn.classList.toggle("active", state.editMode);
+    document.getElementById("addRowBtn").classList.toggle("hidden", !state.editMode);
+    document.querySelector(".editOnlyHeader").classList.toggle("hidden", !state.editMode);
+    renderTable();
+  }
+
+  // -- Modal ------------------------------------------------------------
+
+  function openEditModal(id){
+    const row = state.data.find(function(r){ return r.id === id; });
+    if(!row) return;
+    state.editingId = id;
+    document.getElementById("modalTitle").textContent = "Frage bearbeiten";
+    renderModalCategoryOptions(row.category);
+    document.getElementById("modalQuestion").value = row.question || "";
+    document.getElementById("modalKiAnswer").value = row.kiAnswer || "";
+    document.getElementById("modalUserAnswer").value = row.userAnswer || "";
+    document.getElementById("deleteBtn").classList.remove("hidden");
+    document.getElementById("modalOverlay").classList.remove("hidden");
+  }
+
+  function openAddModal(){
+    state.editingId = null;
+    document.getElementById("modalTitle").textContent = "Neue Frage";
+    renderModalCategoryOptions(state.filterCategory || null);
+    document.getElementById("modalQuestion").value = "";
+    document.getElementById("modalKiAnswer").value = "";
+    document.getElementById("modalUserAnswer").value = "";
+    document.getElementById("deleteBtn").classList.add("hidden");
+    document.getElementById("modalOverlay").classList.remove("hidden");
+  }
+
+  function closeModal(){
+    document.getElementById("modalOverlay").classList.add("hidden");
+    state.editingId = null;
+  }
+
+  function saveEdit(){
+    const category = document.getElementById("modalCategory").value.trim() || "Sonstiges";
+    const question = document.getElementById("modalQuestion").value.trim();
+    const kiAnswer = document.getElementById("modalKiAnswer").value.trim();
+    const userAnswer = document.getElementById("modalUserAnswer").value.trim();
+
+    if(!question){
+      notify("Bitte eine Frage eingeben.", true);
+      return;
+    }
+
+    if(state.editingId === null){
+      state.data.push({
+        id: nextId(),
+        category: category,
+        question: question,
+        kiAnswer: kiAnswer,
+        userAnswer: userAnswer
+      });
+    }else{
+      const row = state.data.find(function(r){ return r.id === state.editingId; });
+      if(row){
+        row.category = category;
+        row.question = question;
+        row.kiAnswer = kiAnswer;
+        row.userAnswer = userAnswer;
+      }
+    }
+
+    persist();
+    closeModal();
+    renderCategoryFilter();
+    renderTable();
+  }
+
+  function deleteCurrentRow(){
+    if(state.editingId === null) return;
+    askConfirm("Diese Frage wirklich löschen?", doDelete);
+    return;
+  }
+  function doDelete(){
+    state.data = state.data.filter(function(r){ return r.id !== state.editingId; });
+    persist();
+    closeModal();
+    renderCategoryFilter();
+    renderTable();
+  }
+
+  function addNewRow(){
+    openAddModal();
+  }
+
+  // -- Export / Import --------------------------------------------------
+
+  function exportJson(){
+    return JSON.stringify(state.data, null, 2);
+  }
+  function exportFileName(){
+    return "fragenkatalog-export-" + new Date().toISOString().slice(0,10) + ".json";
+  }
+
+  function tryDownload(text){
+    try{
+      const blob = new Blob([text], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = exportFileName();
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+
+  function openTransfer(text, hint){
+    document.getElementById("transferText").value = text;
+    document.getElementById("transferHint").textContent = hint;
+    document.getElementById("transferOverlay").classList.remove("hidden");
+  }
+  function closeTransfer(){
+    document.getElementById("transferOverlay").classList.add("hidden");
+  }
+
+  // Export: Download versuchen und zusätzlich das Fenster zum Kopieren anbieten,
+  // denn ob ein Download wirklich ankommt, lässt sich im Browser nicht prüfen.
+  function exportData(){
+    const text = exportJson();
+    tryDownload(text);
+    openTransfer(text, "Export erstellt. Falls kein Download gestartet ist (z. B. in einer abgeschotteten Vorschau), den Text kopieren und als .json-Datei speichern.");
+  }
+
+  function copyTransfer(){
+    const ta = document.getElementById("transferText");
+    ta.focus(); ta.select();
+    let ok = false;
+    try{ ok = document.execCommand("copy"); }catch(e){ ok = false; }
+    if(!ok && navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(ta.value).then(function(){ notify("In die Zwischenablage kopiert."); },
+        function(){ notify("Kopieren nicht möglich. Text bitte manuell markieren (Strg/Cmd+A, Strg/Cmd+C).", true); });
+      return;
+    }
+    notify(ok ? "In die Zwischenablage kopiert." : "Kopieren nicht möglich. Text bitte manuell markieren (Strg/Cmd+A, Strg/Cmd+C).", !ok);
+  }
+
+  function normalizeRows(parsed){
+    if(!Array.isArray(parsed)) throw new Error("JSON ist kein Array.");
+    return parsed.map(function(row, idx){
+      return {
+        id: typeof row.id === "number" ? row.id : idx + 1,
+        category: row.category || "Sonstiges",
+        question: row.question || "",
+        kiAnswer: row.kiAnswer || row.aiAnswer || "",
+        userAnswer: row.userAnswer || row.michaAnswer || ""
+      };
+    }).filter(function(row){ return row.question; });
+  }
+
+  function applyImport(text, replace){
+    try{
+      const normalized = normalizeRows(JSON.parse(text));
+      if(normalized.length === 0){
+        notify("Keine gültigen Fragen gefunden.", true);
+        return;
+      }
+      if(replace){
+        state.data = normalized;
+      }else{
+        let idCounter = nextId();
+        normalized.forEach(function(row){
+          row.id = idCounter++;
+          state.data.push(row);
+        });
+      }
+      persist();
+      renderCategoryFilter();
+      renderTable();
+      closeTransfer();
+      notify(normalized.length + " Fragen " + (replace ? "übernommen (ersetzt)." : "angehängt."));
+    }catch(e){
+      notify("Import fehlgeschlagen: " + e.message, true);
+    }
+  }
+
+  // Import per Datei: Inhalt ins Fenster laden, dort Ersetzen oder Anhängen wählen.
+  function importData(file){
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt){
+      openTransfer(String(evt.target.result || ""), "Datei geladen. Wähle „Import: Ersetzen“ oder „Import: Anhängen“. Du kannst JSON auch direkt hier einfügen.");
+    };
+    reader.onerror = function(){
+      notify("Datei konnte nicht gelesen werden. JSON stattdessen über „Export / Import“ einfügen.", true);
+    };
+    reader.readAsText(file);
+  }
+
+  // -- Init ---------------------------------------------------------------
+
+  function initData(){
+    state.data = loadData();
+  }
+
+  function bindEvents(){
+    document.getElementById("editModeBtn").addEventListener("click", toggleEditMode);
+    document.getElementById("addRowBtn").addEventListener("click", addNewRow);
+    document.getElementById("exportBtn").addEventListener("click", exportData);
+    document.getElementById("importBtn").addEventListener("click", function(){
+      document.getElementById("importFileInput").click();
+    });
+    document.getElementById("importFileInput").addEventListener("change", function(e){
+      importData(e.target.files[0]);
+      e.target.value = "";
+    });
+    document.getElementById("categoryFilter").addEventListener("change", filterTable);
+    document.getElementById("searchInput").addEventListener("input", filterTable);
+    document.getElementById("saveBtn").addEventListener("click", saveEdit);
+    document.getElementById("deleteBtn").addEventListener("click", deleteCurrentRow);
+    document.getElementById("cancelBtn").addEventListener("click", closeModal);
+    document.getElementById("confirmNo").addEventListener("click", closeConfirm);
+    document.getElementById("confirmYes").addEventListener("click", function(){
+      const cb = confirmYesCb; closeConfirm(); if(cb) cb();
+    });
+    document.getElementById("transferClose").addEventListener("click", closeTransfer);
+    document.getElementById("transferCopy").addEventListener("click", copyTransfer);
+    document.getElementById("transferDownload").addEventListener("click", function(){
+      if(!tryDownload(document.getElementById("transferText").value)){
+        notify("Download nicht möglich. Bitte kopieren.", true);
+      }
+    });
+    document.getElementById("transferReplace").addEventListener("click", function(){
+      applyImport(document.getElementById("transferText").value, true);
+    });
+    document.getElementById("transferAppend").addEventListener("click", function(){
+      applyImport(document.getElementById("transferText").value, false);
+    });
+    document.getElementById("modalOverlay").addEventListener("click", function(e){
+      if(e.target.id === "modalOverlay") closeModal();
+    });
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape"){ closeModal(); closeConfirm(); closeTransfer(); }
+    });
+  }
+
+  function init(){
+    initData();
+    bindEvents();
+    renderCategoryFilter();
+    renderTable();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>

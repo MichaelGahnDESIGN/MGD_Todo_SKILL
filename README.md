@@ -16,7 +16,7 @@
 Ein universeller Skill für KI-Agenten (Claude Code & ChatGPT Codex), der Projekt-Todos in einer **selbst-gehosteten, sortierbaren und durchsuchbaren `TODO.html`** verwaltet — mit frei anlegbaren Kategorien und Unterkategorien, ohne externe Services, ohne Datenbank, vollständig im eigenen Repo.
 
 > [!NOTE]
-> **👤 FÜR ENTWICKLER** — Version **1.4.0** ergänzt `/todo-doku [Thema]`, das Living Documentation, TODO und lokalen Graphify-Index zusammenhält. Auch die bereits integrierten Befehle `/wissen` und `/wissen-ansehen` sind enthalten. `/todo-edit <id>`
+> **👤 FÜR ENTWICKLER** — Version **1.5.0** bringt `/board`, `/fragenkatalog` und `/prozesse` dazu. Version **1.4.0** ergänzt `/todo-doku [Thema]`, das Living Documentation, TODO und lokalen Graphify-Index zusammenhält. Auch die bereits integrierten Befehle `/wissen` und `/wissen-ansehen` sind enthalten. `/todo-edit <id>`
 > bearbeitet alle Felder eines Todos (Titel, Priorität, Kategorie/
 > Unterkategorie, Status, Notizen, Links) — `/todo-update` deckte davon nur
 > Status/Kategorie/Notizen ab. Dazu bekommt die TODO.html selbst einen
@@ -31,6 +31,13 @@ Ein universeller Skill für KI-Agenten (Claude Code & ChatGPT Codex), der Projek
 > Eine bestehende `TODO.html` läuft unverändert weiter. Für die neuen
 > Möglichkeiten einmalig `/todo-migrate` aufrufen — der Befehl erkennt selbst,
 > auf welchem Stand die Datei ist. Siehe [CHANGELOG.md](CHANGELOG.md).
+
+## Weitere Werkzeuge im Skill (ab 1.5.0)
+
+- **`/board`**: Message-Board und Dashboard für parallel arbeitende Threads. Eine Seite mit Phasen, Thread-Ampeln, offenen Fragen und letzten Nachrichten. Anleitung: [docs/board.md](docs/board.md), Skill: [skills/board/SKILL.md](skills/board/SKILL.md).
+- **`/fragenkatalog`**: durchsuchbarer Fragenkatalog mit KI-Antworten aus Experten-Perspektiven. Skill: [skills/fragenkatalog/SKILL.md](skills/fragenkatalog/SKILL.md), Anleitungen: [docs/fragenkatalog/](docs/fragenkatalog/Home.md). Früher eigenes Repo `Fragenkatalog-Skill`.
+- **`/prozesse`**: Hintergrundprozesse prüfen und aufräumen. Skill: [skills/prozesse/SKILL.md](skills/prozesse/SKILL.md). Früher eigenes Repo `MGD_Prozesse_SKILL`.
+- **`/wissen`**, **`/wissen-ansehen`**, **`/todo-doku`**: schon enthalten, siehe oben.
 
 ## Das Problem
 
