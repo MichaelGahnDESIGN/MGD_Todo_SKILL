@@ -2,7 +2,7 @@
 name: board
 description: Zeigt das Message-Board und Projekt-Dashboard: alle Threads, Phasen, offene Fragen und die letzten Chat-Nachrichten auf einer Seite. Für /board, "Dashboard anzeigen", Überblick über Threads und Fortschritt.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
   integration:
     - todo
     - wissen
@@ -53,6 +53,13 @@ Andere Orte: `board.py --chat <chat.jsonl> --status <status.json> --out <datei.h
 
 Status-Wörter: `fertig` (grün), `arbeitet` (blau), `wartet` (gelb), `blockiert` (rot), `offen` (grau).
 Ohne Angabe rät das Skript aus dem Text ("blockiert", "wartet", "fertig"/"live").
+
+## Interaktiv (ab 1.1.0)
+
+- Phasen, Threads, Fragen und Hinweise lassen sich **aufklappen**. Oben: „Alles aufklappen/zuklappen".
+- Jede Frage zeigt, **aus welchem Thread** sie kommt (`von`). Mit „Frage kopieren" kopierst du sie, im Feld schreibst du deine Antwort (bleibt im Browser gespeichert), „Antwort kopieren" erzeugt einen Text zum Einfügen in den Chat. „Alle beantworteten kopieren" sammelt alle.
+- Links im Text sind klickbar. Thread-Karten haben „Thread öffnen" (Feld `session`) und zeigen die letzten Nachrichten.
+- Felder für Fragen/Hinweise: `{"text":"…","von":"thread","detail":"…","link":"https://…"}` (ein reiner Text geht weiterhin).
 
 ## Regeln
 

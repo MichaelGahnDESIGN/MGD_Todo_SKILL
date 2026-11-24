@@ -27,6 +27,12 @@ class BoardTest(unittest.TestCase):
         page = self.run_board(chat, {'threads': {}})
         self.assertNotIn('<script>x</script>', page)
 
+    def test_questions_interactive_with_source(self):
+        page = self.run_board([], {'threads': {}, 'fragen': [{'text': 'Frage 1?', 'von': 'plattform', 'detail': 'Details https://x.de'}]})
+        self.assertIn("data-von='plattform'", page)
+        self.assertIn("data-act='ca'", page)
+        self.assertIn('<a href="https://x.de"', page)
+
     def test_broken_chat_line_ignored(self):
         page = self.run_board(['kaputt', ''], {'threads': {}})
         self.assertIn('0 Nachrichten', page)
