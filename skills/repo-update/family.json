@@ -1,0 +1,269 @@
+{
+ "owner": "MichaelGahnDESIGN",
+ "url": "https://github.com/MichaelGahnDESIGN/",
+ "repos": [
+  {
+   "repo": "MGD_Todo_SKILL",
+   "befehl": "/todo",
+   "kategorie": "Aufgaben",
+   "kurz": "Aufgabenliste in einer HTML-Datei, dazu /board, /wissen, /fragenkatalog, /prozesse",
+   "lokal": [
+    "todo",
+    "mgd-todo"
+   ],
+   "empfiehlt": [
+    "MGD_Living-Documentation",
+    "MGD_DEV_SKILL",
+    "MGD_AI-Thread",
+    "MGD_Autopilot_SKILL",
+    "MGD_ProjectClean_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_DEV_SKILL",
+   "befehl": "/dev",
+   "kategorie": "Arbeitsablauf",
+   "kurz": "Release, Sync, Backup, Cleanup, Tests und Wissensdokumentation",
+   "lokal": [
+    "mgd-dev",
+    "dev"
+   ],
+   "empfiehlt": [
+    "MGD_Todo_SKILL",
+    "MGD_Backup_SKILL",
+    "MGD_ProjectClean_SKILL",
+    "MGD_Autopilot_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_Autopilot_SKILL",
+   "befehl": "/autopilot",
+   "kategorie": "Arbeitsablauf",
+   "kurz": "Projektziele sicher unbeaufsichtigt abarbeiten",
+   "lokal": [
+    "mgd-autopilot"
+   ],
+   "empfiehlt": [
+    "MGD_Todo_SKILL",
+    "MGD_DEV_SKILL",
+    "MGD_AI-Thread",
+    "MGD_AI-PlayTest_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_Backup_SKILL",
+   "befehl": "/backup",
+   "kategorie": "Arbeitsablauf",
+   "kurz": "Backups lokal, NAS und Cloud mit Prüfsummen",
+   "lokal": [
+    "mgd-backup-source"
+   ],
+   "empfiehlt": [
+    "MGD_DEV_SKILL",
+    "MGD_ProjectClean_SKILL",
+    "MGD_Software-Updater_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_AI-Thread",
+   "befehl": "/thread",
+   "kategorie": "Arbeitsablauf",
+   "kurz": "Ehrliche Übergabe, bevor das Kontextfenster voll ist",
+   "lokal": [
+    "mgd-thread"
+   ],
+   "empfiehlt": [
+    "MGD_Todo_SKILL",
+    "MGD_Autopilot_SKILL",
+    "MGD_Living-Documentation"
+   ]
+  },
+  {
+   "repo": "MGD_ProjectClean_SKILL",
+   "befehl": "/projectclean",
+   "kategorie": "Arbeitsablauf",
+   "kurz": "Abschluss und Aufräumen: Version, Tests, Commit, Doku, Backup",
+   "lokal": [
+    "mgd-projectclean"
+   ],
+   "empfiehlt": [
+    "MGD_DEV_SKILL",
+    "MGD_Backup_SKILL",
+    "MGD_Todo_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_Living-Documentation",
+   "befehl": "/doku",
+   "kategorie": "Wissen",
+   "kurz": "Lebendige Dokumentation: keine Entscheidung geht verloren",
+   "lokal": [
+    "living-documentation"
+   ],
+   "empfiehlt": [
+    "MGD_Todo_SKILL",
+    "MGD_DEV_SKILL",
+    "MGD_AI-Thread"
+   ]
+  },
+  {
+   "repo": "MGD_BugReport_SKILL",
+   "befehl": "/bugreport",
+   "kategorie": "Qualität",
+   "kurz": "Handbuch für Bug-Reports, Feedback und QA in Apps",
+   "lokal": [
+    "mgd-bugreport"
+   ],
+   "empfiehlt": [
+    "MGD_AI-PlayTest_SKILL",
+    "MGD_Software-Updater_SKILL",
+    "MGD_Todo_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_AI-PlayTest_SKILL",
+   "befehl": "/playtest",
+   "kategorie": "Qualität",
+   "kurz": "Test aus Nutzerperspektive für KI-gebaute Funktionen",
+   "lokal": [
+    "mgd-playtest"
+   ],
+   "empfiehlt": [
+    "MGD_BugReport_SKILL",
+    "MGD_Autopilot_SKILL",
+    "MGD_DEV_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_AI-Testaccount_SKILL",
+   "befehl": "/testaccount",
+   "kategorie": "Qualität",
+   "kurz": "Testkonten per Plus-Adresse mit klaren Sicherheitsregeln",
+   "lokal": [],
+   "empfiehlt": [
+    "MGD_AI-PlayTest_SKILL",
+    "MGD_BugReport_SKILL",
+    "MGD_Autopilot_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_Software-Updater_SKILL",
+   "befehl": "/software-updater",
+   "kategorie": "Entwickeln",
+   "kurz": "Update-Systeme planen und umsetzen",
+   "lokal": [
+    "mgd-software-updater"
+   ],
+   "empfiehlt": [
+    "MGD_DEV_SKILL",
+    "MGD_Backup_SKILL",
+    "MGD_BugReport_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_Divi5-Dev_SKILL",
+   "befehl": "/divi",
+   "kategorie": "Entwickeln",
+   "kurz": "WordPress und Divi 5: Animationen, Plugins, Child-Themes",
+   "lokal": [
+    "mgd-divi5-dev"
+   ],
+   "empfiehlt": [
+    "MGD_DEV_SKILL",
+    "MGD-SEO",
+    "MGD_Backup_SKILL",
+    "MGD_Todo_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_JTL-OPC_SKILL",
+   "befehl": "/jtl-opc",
+   "kategorie": "Entwickeln",
+   "kurz": "JTL-Shop-5-Seiten im OnPage Composer automatisch befüllen",
+   "lokal": [],
+   "empfiehlt": [
+    "MGD-SEO",
+    "MGD_DEV_SKILL",
+    "MGD_Todo_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD-SEO",
+   "befehl": "/seo",
+   "kategorie": "Entwickeln",
+   "kurz": "SEO-Skill mit lokalem Prüfkern",
+   "lokal": [
+    "seo"
+   ],
+   "empfiehlt": [
+    "MGD_Divi5-Dev_SKILL",
+    "MGD_JTL-OPC_SKILL",
+    "MGD_DEV_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD-Motion-Graphics-Video-Skill",
+   "befehl": "/mgd-video",
+   "kategorie": "Medien",
+   "kurz": "Reels, YouTube, Werbefilme und Animationen",
+   "lokal": [
+    "mgd-video",
+    "mgd-motion-graphics-video"
+   ],
+   "empfiehlt": [
+    "MGD_Autopilot_SKILL",
+    "MGD_ProjectClean_SKILL",
+    "MGD_Todo_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD-Foundry-VTT_Skill",
+   "befehl": "/vttl-notizbuch",
+   "kategorie": "Medien",
+   "kurz": "Foundry VTT und D&D-Notizbücher",
+   "lokal": [],
+   "empfiehlt": [
+    "MGD_Todo_SKILL",
+    "MGD_Living-Documentation",
+    "MGD_AI-Thread"
+   ]
+  },
+  {
+   "repo": "MGD_AI-Basic-Projektordner_TOOL",
+   "befehl": "Vorlage",
+   "kategorie": "Werkzeuge",
+   "kurz": "Projektordner für ChatGPT Codex, Cowork und Claude Code",
+   "lokal": [],
+   "empfiehlt": [
+    "MGD_Todo_SKILL",
+    "MGD_DEV_SKILL",
+    "MGD_Living-Documentation",
+    "MGD_Autopilot_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_Docker_Projektbuilder",
+   "befehl": "Generator",
+   "kategorie": "Werkzeuge",
+   "kurz": "Docker-Plattform-Gerüste aus sechs Fragen",
+   "lokal": [],
+   "empfiehlt": [
+    "MGD_DEV_SKILL",
+    "MGD_Backup_SKILL",
+    "MGD_Software-Updater_SKILL"
+   ]
+  },
+  {
+   "repo": "MGD_Claude-Codex_MCP",
+   "befehl": "MCP",
+   "kategorie": "Werkzeuge",
+   "kurz": "Lokales MCP für Aufgaben, Chat und Übergaben zwischen KI-Agenten",
+   "lokal": [],
+   "empfiehlt": [
+    "MGD_AI-Thread",
+    "MGD_Autopilot_SKILL",
+    "MGD_Todo_SKILL"
+   ]
+  }
+ ]
+}

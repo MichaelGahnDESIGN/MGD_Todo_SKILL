@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 1.5.0 — 2026-11-24
+## 1.6.0 — 2026-11-24
 
 ### Neu
 
@@ -10,6 +10,14 @@
 - `/fragenkatalog` aus dem bisherigen Repo `Fragenkatalog-Skill` übernommen (Skill, Vorlage, Anleitungen unter `docs/fragenkatalog/`).
 - `/prozesse` aus dem bisherigen Repo `MGD_Prozesse_SKILL` übernommen.
 - Claude- und Codex-Befehle für `board`, `fragenkatalog`, `prozesse`.
+- Update-Befehle: `/dashboard-update`, `/messageboard-update`, `/wissen-update`, `/todo-update`, `/living-doku-update`, `/skill-update` (lokale Skills gegen GitHub, mit Sicherung), `/repo-update` (= `/github-update`: README, Wiki, Release, Paket), `/repo-check`, `/related-update`, `/MGD-update` (beide Richtungen).
+- `skills/repo-update/family.json`: zentrale Liste der MGD-Skills für Empfehlungen und `/skill-update`.
+- Block „Skill-Empfehlungen" und „Verwandte MGD Projekte" für alle öffentlichen MGD-Skill-Repos.
+
+### Geändert
+
+- README neu gestaltet (Kurzfassung), die ausführliche Anleitung liegt jetzt in `docs/anleitung.md`. Lizenz und Impressum stehen am Ende.
+- Wiki erweitert (Befehle, Board, Updates, Skill-Familie).
 
 ## 1.4.0 — 2026-11-08
 
